@@ -11,8 +11,7 @@ class Baslangic extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        //aaaaa
-        //aaa
+        //deneme
         splash: Image(image: AssetImage('images/logo.png')),
         nextScreen: Yoklama(),
         splashTransition: SplashTransition.slideTransition,
