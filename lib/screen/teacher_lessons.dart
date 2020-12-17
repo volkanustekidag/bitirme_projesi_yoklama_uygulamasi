@@ -3,6 +3,7 @@ import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
+import 'package:yoklama/utilities/main_drawer.dart';
 import 'teacher_lesson_details.dart';
 
 class Teacher_Lesons extends StatefulWidget {
@@ -28,7 +29,6 @@ class _Teacher_LesonsState extends State<Teacher_Lesons> {
       appBar: AppBar(
         title: Center(
           child: Row(children: <Widget>[
-            Icon(Icons.menu),
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Text(
@@ -40,6 +40,7 @@ class _Teacher_LesonsState extends State<Teacher_Lesons> {
           ]),
         ),
       ),
+      drawer: MainDrawer(),
       body: Stack(children: <Widget>[
         Column(
           children: <Widget>[
