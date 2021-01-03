@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:yoklama/screen/teacher_lessons.dart';
-import 'package:yoklama/screen/teacher_lessons.dart';
+import 'package:yoklama/screen/student/student_lessons.dart';
+import 'package:yoklama/screen/teacher/teacher_lessons.dart';
 
 class Yoklama extends StatefulWidget {
   @override
@@ -134,11 +134,21 @@ class _YoklamaState extends State<Yoklama> {
                     width: double.infinity,
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    Teacher_Lesons()));
+                        setState(() {
+                          if (value == 0) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Student_Lessons()));
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Teacher_Lessons()));
+                          }
+                        });
                       },
                       elevation: 5.0,
                       padding: EdgeInsets.all(15.0),

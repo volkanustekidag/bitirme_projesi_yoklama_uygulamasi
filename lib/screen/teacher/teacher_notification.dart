@@ -42,11 +42,17 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                     bottomRight: Radius.circular(20))),
             color: Colors.white,
             child: Row(children: <Widget>[
-              CircleAvatar(
-                maxRadius: 15,
-                minRadius: 15,
-                child: Icon(Icons.person),
-                //  backgroundImage: AssetImage("images/logo.png")
+              Container(
+                width: 40,
+                height: 40,
+                margin: EdgeInsets.only(top: 10, bottom: 5),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image:
+                          NetworkImage('https://i.hizliresim.com/kEpByj.jpg'),
+                      fit: BoxFit.fill,
+                    )),
               ),
               SizedBox(
                 width: 8,
@@ -114,16 +120,26 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                     SizedBox(
                       width: 5,
                     ),
-                    CircleAvatar(
-                      maxRadius: 15,
-                      minRadius: 15,
-                      child: Icon(Icons.person),
-                      //  backgroundImage: AssetImage("images/logo.png")
+                    Container(
+                      width: 45,
+                      height: 45,
+                      margin: EdgeInsets.only(top: 10, bottom: 5),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://i.hizliresim.com/kEpByj.jpg'),
+                            fit: BoxFit.fill,
+                          )),
                     ),
                     SizedBox(
                       width: 8,
                     ),
-                    Text("Ali Arı")
+                    Text(
+                      "Ali Arı",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    )
                   ],
                 ),
                 Container(
@@ -151,7 +167,17 @@ Widget buildItem(String item) {
     padding: EdgeInsets.all(10),
     child: Card(
       child: ListTile(
-        leading: CircleAvatar(child: Icon(Icons.person)),
+        leading: Container(
+          width: 45,
+          height: 45,
+          margin: EdgeInsets.only(top: 10, bottom: 5),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage('https://i.hizliresim.com/kEpByj.jpg'),
+                fit: BoxFit.fill,
+              )),
+        ),
         title: Text('Ali Arı'),
         trailing: Icon(Icons.arrow_forward_ios),
         subtitle: Text(item),

@@ -1,17 +1,16 @@
-import 'package:yoklama/screen/teacher_lesson_create.dart';
+import 'package:yoklama/screen/student/student_main_drawer.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
-import 'package:yoklama/utilities/main_drawer.dart';
 import 'teacher_lesson_details.dart';
 
-class Teacher_Lesons extends StatefulWidget {
+class Teacher_Lessons extends StatefulWidget {
   @override
-  _Teacher_LesonsState createState() => _Teacher_LesonsState();
+  _Teacher_LessonsState createState() => _Teacher_LessonsState();
 }
 
-class _Teacher_LesonsState extends State<Teacher_Lesons> {
+class _Teacher_LessonsState extends State<Teacher_Lessons> {
   int selectedIndex = 0;
 
   final GlobalKey<AnimatedListState> key = GlobalKey();
@@ -29,13 +28,10 @@ class _Teacher_LesonsState extends State<Teacher_Lesons> {
       appBar: AppBar(
         title: Center(
           child: Row(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                'Dersler',
-                style: TextStyle(
-                    fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
-              ),
+            Text(
+              'Dersler',
+              style: TextStyle(
+                  fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
             ),
           ]),
         ),
