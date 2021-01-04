@@ -61,7 +61,7 @@ class _Student_LessonsState extends State<Student_Lessons> {
                       color: kBlueFontToune,
                     ),
                     SizedBox(
-                      width: 15.0,
+                      width: 5.0,
                     ),
                     Text(
                       'Derse Katıl',
@@ -131,7 +131,7 @@ class _Student_LessonsState extends State<Student_Lessons> {
                             Navigator.pop(context);
                           });
                         },
-                        child: Text('+Oluştur',
+                        child: Text('+Katıl',
                             style:
                                 TextStyle(fontSize: 20, color: kBlueFontToune)),
                       ),
@@ -152,77 +152,11 @@ class _Student_LessonsState extends State<Student_Lessons> {
                       style: TextStyle(color: Colors.white, fontSize: 17),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Ders Adı',
+                        hintText: 'Ders Kodu',
                         hintStyle: TextStyle(color: Colors.white60),
                         prefixIcon: Icon(Icons.book, color: Colors.white),
                       ),
                     )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    child: TextField(
-                      onChanged: (text) {
-                        lessonPerson = text;
-                      },
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      decoration: InputDecoration(
-                        hintText: 'Bölüm Adı',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.white60),
-                        prefixIcon:
-                            Icon(Icons.school_sharp, color: Colors.white),
-                      ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    child: TextField(
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white60),
-                        border: InputBorder.none,
-                        hintText: 'Devamsızlık Yüzdelik Şart',
-                        prefixIcon: Icon(Icons.filter_alt_outlined,
-                            color: Colors.white),
-                      ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: TextField(
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.white60),
-                        hintText: 'Ders Hakkında Açıklama',
-                        prefixIcon:
-                            Icon(Icons.insert_comment, color: Colors.white),
-                      ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
               ]));
         });
   }

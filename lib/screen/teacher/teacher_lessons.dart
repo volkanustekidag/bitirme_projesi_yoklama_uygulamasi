@@ -1,4 +1,4 @@
-import 'package:yoklama/screen/student/student_main_drawer.dart';
+import 'package:yoklama/screen/teacher/teacher_main_drawer.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:flutter/material.dart';

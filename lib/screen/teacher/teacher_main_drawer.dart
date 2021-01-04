@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/screen/login_screen.dart';
+import 'package:yoklama/screen/teacher/teacher_profile.dart';
+import 'package:yoklama/screen/teacher/teacher_settings.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -42,12 +44,24 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.person),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => TeacherProfile()));
+            },
             title: Text(
               "Profil",
               style: TextStyle(fontSize: 15),
             ),
           ),
           ListTile(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => TeacherSettings()));
+            },
             leading: Icon(Icons.settings),
             title: Text(
               "Ayarlar",
