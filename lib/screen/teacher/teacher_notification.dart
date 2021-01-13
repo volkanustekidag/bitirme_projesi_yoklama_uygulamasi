@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_unicons/unicons.dart';
+import 'package:yoklama/screen/teacher/teacher_notification_details.dart';
 import 'package:yoklama/utilities/constants.dart';
 
 class TeacherNotification extends StatefulWidget {
@@ -57,7 +57,7 @@ class _TeacherNotificationState extends State<TeacherNotification> {
               SizedBox(
                 width: 8,
               ),
-              Text("Dersle ilgili bir şeyler paylaşın...",
+              Text("Dersle ilgili bir duyuru paylaşın...",
                   style: TextStyle(color: Colors.grey, fontSize: 16)),
             ]),
             onPressed: () {
@@ -70,7 +70,7 @@ class _TeacherNotificationState extends State<TeacherNotification> {
               key: key,
               initialItemCount: post.length,
               itemBuilder: (context, index, animation) {
-                return buildItem(post[index]);
+                return buildItem(post[index], context);
               }),
         )
       ],
@@ -162,11 +162,18 @@ class _TeacherNotificationState extends State<TeacherNotification> {
   }
 }
 
-Widget buildItem(String item) {
+Widget buildItem(String item, BuildContext context) {
   return Container(
     padding: EdgeInsets.all(10),
     child: Card(
       child: ListTile(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      TeachNotificationDetails()));
+        },
         leading: Container(
           width: 45,
           height: 45,
