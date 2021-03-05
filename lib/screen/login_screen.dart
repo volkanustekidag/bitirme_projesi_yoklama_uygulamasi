@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:yoklama/screen/student/student_lessons.dart';
-import 'package:yoklama/screen/teacher/teacher_lessons.dart';
 
 class Yoklama extends StatefulWidget {
   @override
   _YoklamaState createState() => _YoklamaState();
 }
 
+final formKey = GlobalKey<FormState>();
+final scaffoldKey = GlobalKey<ScaffoldState>();
+
 class _YoklamaState extends State<Yoklama> {
+  @override
+  void dispose() {
+    formKey.currentState.dispose();
+    super.dispose();
+  }
+
   String girisTipi = 'ÖĞRENCİ', hintText = '00000000000@ogr.inonu.edu.tr';
 
   int value = 0;
@@ -16,6 +24,7 @@ class _YoklamaState extends State<Yoklama> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       body: Stack(
         children: <Widget>[
           Container(
@@ -95,28 +104,35 @@ class _YoklamaState extends State<Yoklama> {
                   SizedBox(
                     height: 30.0,
                   ),
-                  textBox(
-                    boxTitle: 'Email',
-                    boxIcon: Icon(
-                      Icons.email,
-                      color: Colors.white,
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: <Widget>[
+                        textBox(
+                          boxTitle: 'Email',
+                          boxIcon: Icon(
+                            Icons.email,
+                            color: Colors.white,
+                          ),
+                          textHint: hintText,
+                          textInputType: TextInputType.emailAddress,
+                          obscureControl: false,
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        textBox(
+                            boxTitle: 'Şifre',
+                            boxIcon: Icon(
+                              Icons.lock_rounded,
+                              color: Colors.white,
+                            ),
+                            textHint: '**********',
+                            textInputType: null,
+                            obscureControl: true),
+                      ],
                     ),
-                    textHint: hintText,
-                    textInputType: TextInputType.emailAddress,
-                    obscureControl: false,
                   ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  textBox(
-                      boxTitle: 'Şifre',
-                      boxIcon: Icon(
-                        Icons.lock_rounded,
-                        color: Colors.white,
-                      ),
-                      textHint: '**********',
-                      textInputType: null,
-                      obscureControl: true),
                   SizedBox(
                     height: 15.0,
                   ),
@@ -135,7 +151,13 @@ class _YoklamaState extends State<Yoklama> {
                     child: RaisedButton(
                       onPressed: () {
                         setState(() {
-                          if (value == 0) {
+                          if (!formKey.currentState.validate()) {
+                            print('hata');
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text('Hatalı girişi'),
+                            ));
+                          }
+                          /*if (value == 0) {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -147,7 +169,7 @@ class _YoklamaState extends State<Yoklama> {
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         Teacher_Lessons()));
-                          }
+                          }*/
                         });
                       },
                       elevation: 5.0,
@@ -165,7 +187,23 @@ class _YoklamaState extends State<Yoklama> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Icon(Icons.account_circle_rounded, color: Colors.white),
+                        Text(
+                          'Kaydolmak istiyorum.',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -176,6 +214,7 @@ class _YoklamaState extends State<Yoklama> {
   }
 }
 
+// ignore: camel_case_types
 class textBox extends StatelessWidget {
   final String boxTitle;
   final Icon boxIcon;
@@ -210,7 +249,17 @@ class textBox extends StatelessWidget {
             color: Color(0xFF478DE0),
           ),
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            validator: obscureControl
+                ? MultiValidator([
+                    MinLengthValidator(10, errorText: ''),
+                  ])
+                : MultiValidator([
+                    MinLengthValidator(10,
+                        errorText: 'En az 10 karakter girmelisin.'),
+                    EmailValidator(
+                        errorText: 'Geçerli bir email adresi giriniz.')
+                  ]),
             obscureText: obscureControl,
             keyboardType: textInputType,
             style: TextStyle(color: Colors.white),

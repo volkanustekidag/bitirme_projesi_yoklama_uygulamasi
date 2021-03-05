@@ -21,8 +21,15 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter_unicons: 0.0.1
+  flutter_unicons: ^0.0.1
   toggle_switch: "^0.1.8"
+  form_field_validator: ^1.0.1
+  http: ^0.12.2
+  path_provider: ^1.6.27
+  logger: ^0.9.4
+  open_file: ^3.0.3
+
+
   animated_splash_screen: ^1.0.1+2
   flutter:
     sdk: flutter

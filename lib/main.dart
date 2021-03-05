@@ -1,6 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'screen/login_screen.dart';
+import 'package:yoklama/screen/login_screen.dart';
 
 void main() => runApp(Baslangic());
 
