@@ -23,11 +23,14 @@ class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
       body: Column(
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 width: 60,
                 height: 60,
-                margin: EdgeInsets.only(top: 15, left: 20, right: 5),
+                margin: EdgeInsets.only(
+                  top: 15,
+                ),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -50,9 +53,7 @@ class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
                   ),
                 ],
               ),
-              Container(
-                  padding: EdgeInsets.only(left: 170, right: 20),
-                  child: Icon(Icons.more_horiz))
+              Container(child: Icon(Icons.more_horiz))
             ],
           ),
           Container(

@@ -6,6 +6,7 @@ const kAppBarTextStyle = TextStyle(
   fontFamily: 'OpenSans',
   fontWeight: FontWeight.bold,
 );
+
 const kLessonCardTextStyle = TextStyle(
     fontFamily: 'OpenSans',
     fontWeight: FontWeight.w900,

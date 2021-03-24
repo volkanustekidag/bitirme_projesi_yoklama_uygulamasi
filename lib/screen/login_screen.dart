@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:yoklama/register_screen.dart';
+
+import 'student/student_lessons.dart';
+import 'teacher/teacher_lessons.dart';
 
 class Yoklama extends StatefulWidget {
   @override
@@ -13,7 +17,6 @@ final scaffoldKey = GlobalKey<ScaffoldState>();
 class _YoklamaState extends State<Yoklama> {
   @override
   void dispose() {
-    formKey.currentState.dispose();
     super.dispose();
   }
 
@@ -156,20 +159,21 @@ class _YoklamaState extends State<Yoklama> {
                             scaffoldKey.currentState.showSnackBar(SnackBar(
                               content: Text('Hatalı girişi'),
                             ));
-                          }
-                          /*if (value == 0) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        Student_Lessons()));
                           } else {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        Teacher_Lessons()));
-                          }*/
+                            if (value == 0) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Student_Lessons()));
+                            } else {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Teacher_Lessons()));
+                            }
+                          }
                         });
                       },
                       elevation: 5.0,
@@ -197,9 +201,18 @@ class _YoklamaState extends State<Yoklama> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Icon(Icons.account_circle_rounded, color: Colors.white),
-                        Text(
-                          'Kaydolmak istiyorum.',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        RegisterScreen()));
+                          },
+                          child: Text(
+                            'Kaydolmak istiyorum.',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
@@ -234,11 +247,6 @@ class textBox extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          boxTitle,
-          style: TextStyle(
-              fontSize: 15.0, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
         SizedBox(
           height: 8.0,
         ),

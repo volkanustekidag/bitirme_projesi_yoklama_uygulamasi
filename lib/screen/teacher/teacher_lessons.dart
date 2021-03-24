@@ -248,6 +248,7 @@ Widget _buildItem(
         subtitle: Text(item.numberOfStudents.toString() + " Öğrenci"),
         trailing: IconButton(
           icon: Icon(Icons.book),
+          onPressed: () {},
         ),
       ),
     ),
