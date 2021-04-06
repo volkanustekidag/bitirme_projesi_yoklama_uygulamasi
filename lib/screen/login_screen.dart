@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:yoklama/forgot_pass_view.dart';
 import 'package:yoklama/register_screen.dart';
+import 'package:yoklama/utilities/constants.dart';
+import 'package:yoklama/utilities/widgets.dart';
 
 import 'student/student_lessons.dart';
 import 'teacher/teacher_lessons.dart';
 
-class Yoklama extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _YoklamaState createState() => _YoklamaState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-final formKey = GlobalKey<FormState>();
-final scaffoldKey = GlobalKey<ScaffoldState>();
+GlobalKey<FormState> formKey;
+GlobalKey<ScaffoldState> scaffoldKey;
 
-class _YoklamaState extends State<Yoklama> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class _LoginScreenState extends State<LoginScreen> {
   String girisTipi = 'ÖĞRENCİ', hintText = '00000000000@ogr.inonu.edu.tr';
 
   int value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    formKey = GlobalKey<FormState>();
+    scaffoldKey = GlobalKey<ScaffoldState>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,22 +37,7 @@ class _YoklamaState extends State<Yoklama> {
           Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  Color(0xFF73AEF5),
-                  Color(0xFF61A4F1),
-                  Color(0xFF478DE0),
-                  Color(0xFF398AE5),
-                ],
-                    stops: [
-                  0.1,
-                  0.4,
-                  0.7,
-                  0.9,
-                ])),
+            decoration: LinearGradientBox,
           ),
           Container(
             height: double.infinity,
@@ -111,7 +100,7 @@ class _YoklamaState extends State<Yoklama> {
                     key: formKey,
                     child: Column(
                       children: <Widget>[
-                        textBox(
+                        InputTextBox(
                           boxTitle: 'Email',
                           boxIcon: Icon(
                             Icons.email,
@@ -124,7 +113,7 @@ class _YoklamaState extends State<Yoklama> {
                         SizedBox(
                           height: 30.0,
                         ),
-                        textBox(
+                        InputTextBox(
                             boxTitle: 'Şifre',
                             boxIcon: Icon(
                               Icons.lock_rounded,
@@ -141,56 +130,49 @@ class _YoklamaState extends State<Yoklama> {
                   ),
                   Container(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        'Şifremi unuttum.',
-                        style: TextStyle(fontSize: 12.00, color: Colors.white),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ForgotPassView()));
+                        },
+                        child: Text(
+                          'Şifremi unuttum.',
+                          style:
+                              TextStyle(fontSize: 12.00, color: Colors.white),
+                        ),
                       )),
                   SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 25.0),
-                    width: double.infinity,
-                    child: RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          if (!formKey.currentState.validate()) {
-                            print('hata');
-                            scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text('Hatalı girişi'),
-                            ));
+                  Button(
+                    buttonName: "Giriş Yap",
+                    onPress: () {
+                      setState(() {
+                        if (!formKey.currentState.validate()) {
+                          print('hata');
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text('Hatalı girişi'),
+                          ));
+                        } else {
+                          if (value == 0) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        StudentLessons()));
                           } else {
-                            if (value == 0) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Student_Lessons()));
-                            } else {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Teacher_Lessons()));
-                            }
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        TeacherLessons()));
                           }
-                        });
-                      },
-                      elevation: 5.0,
-                      padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      color: Colors.white,
-                      child: Text(
-                        'GİRİŞ YAP',
-                        style: TextStyle(
-                          color: Color(0xFF478DE0),
-                          fontFamily: 'OpenSans',
-                          fontSize: 20.00,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
+                        }
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 10,
@@ -200,7 +182,11 @@ class _YoklamaState extends State<Yoklama> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Icon(Icons.account_circle_rounded, color: Colors.white),
+                        Image(
+                          image: AssetImage('images/logo.png'),
+                          height: 50,
+                          width: 50,
+                        ),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -223,65 +209,6 @@ class _YoklamaState extends State<Yoklama> {
           )
         ],
       ),
-    );
-  }
-}
-
-// ignore: camel_case_types
-class textBox extends StatelessWidget {
-  final String boxTitle;
-  final Icon boxIcon;
-  final String textHint;
-  final TextInputType textInputType;
-  final bool obscureControl;
-
-  const textBox(
-      {@required this.boxTitle,
-      @required this.boxIcon,
-      @required this.textHint,
-      @required this.textInputType,
-      @required this.obscureControl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: 8.0,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color(0xFF478DE0),
-          ),
-          height: 60.0,
-          child: TextFormField(
-            validator: obscureControl
-                ? MultiValidator([
-                    MinLengthValidator(10, errorText: ''),
-                  ])
-                : MultiValidator([
-                    MinLengthValidator(10,
-                        errorText: 'En az 10 karakter girmelisin.'),
-                    EmailValidator(
-                        errorText: 'Geçerli bir email adresi giriniz.')
-                  ]),
-            obscureText: obscureControl,
-            keyboardType: textInputType,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 14.0),
-                prefixIcon: boxIcon,
-                hintText: textHint,
-                hintStyle: TextStyle(
-                  color: Colors.white,
-                )),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yoklama/screen/login_screen.dart';
-import 'package:yoklama/screen/student/student_lessons.dart';
-import 'package:yoklama/screen/teacher/teacher_lessons.dart';
+import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
+import 'package:yoklama/utilities/widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -10,6 +9,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   int menuItemValue;
+  String adSoyad;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  textBox(
+                  InputTextBox(
+                      onChanged: (val) {
+                        setState(() {
+                          adSoyad = val;
+                        });
+                      },
                       boxTitle: "Ad Soyad",
                       boxIcon: Icon(
                         Icons.account_box_rounded,
@@ -77,11 +82,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       textHint: "Ad Soyad",
                       textInputType: null,
-                      obscureControl: true),
+                      obscureControl: false),
                   SizedBox(
                     height: 15.0,
                   ),
-                  textBox(
+                  InputTextBox(
                     boxTitle: 'Email',
                     boxIcon: Icon(
                       Icons.email,
@@ -94,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 15.0,
                   ),
-                  textBox(
+                  InputTextBox(
                       boxTitle: 'Şifre',
                       boxIcon: Icon(
                         Icons.lock_rounded,
@@ -106,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 15.0,
                   ),
-                  textBox(
+                  InputTextBox(
                       boxTitle: 'Tekrar Şifre',
                       boxIcon: Icon(
                         Icons.lock_rounded,
@@ -158,52 +163,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 25.0),
-                    width: double.infinity,
-                    child: RaisedButton(
-                      onPressed: () {
-                        setState(() {
-                          if (!formKey.currentState.validate()) {
-                            print('hata');
-                            scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text('Hatalı girişi'),
-                            ));
-                          } else {
-                            if (0 == 0) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Student_Lessons()));
-                            } else {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Teacher_Lessons()));
-                            }
-                          }
-                        });
-                      },
-                      elevation: 5.0,
-                      padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      color: Colors.white,
-                      child: Text(
-                        'KAYDOL',
-                        style: TextStyle(
-                          color: Color(0xFF478DE0),
-                          fontFamily: 'OpenSans',
-                          fontSize: 20.00,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.symmetric(vertical: 25.0),
+                      width: double.infinity,
+                      child: Button(
+                        buttonName: "KAYDOL",
+                        onPress: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      TeacherNewUserDetails(
+                                        teacherNameSurname: adSoyad,
+                                      )));
+                        },
+                      )),
                 ],
               ),
             ),

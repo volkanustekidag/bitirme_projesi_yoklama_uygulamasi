@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
 import 'package:yoklama/module/lesson.dart';
+import 'package:yoklama/screen/student/student_lessons_detail.dart';
 import 'package:yoklama/screen/student/student_main_drawer.dart';
 import 'package:yoklama/screen/teacher/teacher_lesson_details.dart';
 import 'package:yoklama/utilities/constants.dart';
 
-class Student_Lessons extends StatefulWidget {
+class StudentLessons extends StatefulWidget {
   @override
-  _Student_LessonsState createState() => _Student_LessonsState();
+  _StudentLessonsState createState() => _StudentLessonsState();
 }
 
-class _Student_LessonsState extends State<Student_Lessons> {
+class _StudentLessonsState extends State<StudentLessons> {
   @override
   final GlobalKey<AnimatedListState> key = GlobalKey();
 
@@ -171,8 +172,7 @@ Widget _buildItem(
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      TeacherLessonDetails(item)));
+                  builder: (BuildContext context) => StudentLessonDetails()));
         },
         title: Text(
           item.lessonName,

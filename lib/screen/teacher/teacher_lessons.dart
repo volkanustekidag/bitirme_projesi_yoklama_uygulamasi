@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
 import 'teacher_lesson_details.dart';
 
-class Teacher_Lessons extends StatefulWidget {
+class TeacherLessons extends StatefulWidget {
   @override
-  _Teacher_LessonsState createState() => _Teacher_LessonsState();
+  _TeacherLessonsState createState() => _TeacherLessonsState();
 }
 
-class _Teacher_LessonsState extends State<Teacher_Lessons> {
+class _TeacherLessonsState extends State<TeacherLessons> {
   int selectedIndex = 0;
 
   final GlobalKey<AnimatedListState> key = GlobalKey();

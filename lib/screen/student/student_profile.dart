@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/utilities/constants.dart';
 
-class TeacherProfile extends StatefulWidget {
-  @override
-  _TeacherProfileState createState() => _TeacherProfileState();
-}
-
-class _TeacherProfileState extends State<TeacherProfile> {
+class StudentProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +27,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 Positioned(
                   top: 70,
                   left: 150,
-                  child: Text("Ali ARI",
+                  child: Text("Volkan Üstekidağ",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -41,7 +36,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                 Positioned(
                   top: 95,
                   left: 150,
-                  child: Text("Doç. Dr. Öğrt. Görv.",
+                  child: Text("Bilgisayar Mühendisliği",
                       style: TextStyle(fontSize: 15, color: Colors.white)),
                 ),
                 Positioned(
@@ -56,7 +51,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('images/ali.jpg'))),
+                              image: AssetImage('images/volkan.jpg'))),
                     ),
                   ),
                 ),
@@ -66,7 +61,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
           Card(
             child: ListTile(
               title: Text(
-                "Ali Arı",
+                "Volkan Üstekidağ",
               ),
               leading: Icon(Icons.person),
             ),
@@ -74,7 +69,7 @@ class _TeacherProfileState extends State<TeacherProfile> {
           Card(
             child: ListTile(
               title: Text(
-                "ali.ari@inonu.edu.tr",
+                "02170201039@inonu.edu.tr",
               ),
               leading: Icon(Icons.email),
             ),

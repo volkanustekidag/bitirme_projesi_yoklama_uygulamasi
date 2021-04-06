@@ -17,17 +17,12 @@ class MainDrawer extends StatelessWidget {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    width: 100,
-                    height: 100,
-                    margin: EdgeInsets.only(top: 30, bottom: 5),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://i.hizliresim.com/kEpByj.jpg'),
-                          fit: BoxFit.fill,
-                        )),
+                  Hero(
+                    tag: "ali",
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('images/ali.jpg'),
+                    ),
                   ),
                   Text("Ali ARI",
                       style: TextStyle(
@@ -70,10 +65,10 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Yoklama()));
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => LoginScreen()),
+              );
             },
             leading: Icon(Icons.exit_to_app),
             title: Text(

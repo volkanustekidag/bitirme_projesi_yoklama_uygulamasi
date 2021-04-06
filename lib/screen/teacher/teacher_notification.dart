@@ -42,17 +42,8 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                     bottomRight: Radius.circular(20))),
             color: Colors.white,
             child: Row(children: <Widget>[
-              Container(
-                width: 40,
-                height: 40,
-                margin: EdgeInsets.only(top: 10, bottom: 5),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image:
-                          NetworkImage('https://i.hizliresim.com/kEpByj.jpg'),
-                      fit: BoxFit.fill,
-                    )),
+              CircleAvatar(
+                backgroundImage: AssetImage('images/ali.jpg'),
               ),
               SizedBox(
                 width: 8,
@@ -120,17 +111,8 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                     SizedBox(
                       width: 5,
                     ),
-                    Container(
-                      width: 45,
-                      height: 45,
-                      margin: EdgeInsets.only(top: 10, bottom: 5),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                'https://i.hizliresim.com/kEpByj.jpg'),
-                            fit: BoxFit.fill,
-                          )),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('images/ali.jpg'),
                     ),
                     SizedBox(
                       width: 8,
@@ -174,16 +156,8 @@ Widget buildItem(String item, BuildContext context) {
                   builder: (BuildContext context) =>
                       TeachNotificationDetails()));
         },
-        leading: Container(
-          width: 45,
-          height: 45,
-          margin: EdgeInsets.only(top: 10, bottom: 5),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: NetworkImage('https://i.hizliresim.com/kEpByj.jpg'),
-                fit: BoxFit.fill,
-              )),
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('images/ali.jpg'),
         ),
         title: Text('Ali Arı'),
         trailing: Icon(Icons.arrow_forward_ios),

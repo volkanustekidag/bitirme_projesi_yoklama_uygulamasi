@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/screen/login_screen.dart';
+import 'package:yoklama/screen/student/student_profile.dart';
+import 'package:yoklama/screen/teacher/teacher_settings.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -21,8 +23,7 @@ class MainDrawer extends StatelessWidget {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(
-                              'https://i.hizliresim.com/gGZyYB.jpg'),
+                          image: AssetImage('images/volkan.jpg'),
                           fit: BoxFit.fill,
                         )),
                   ),
@@ -40,6 +41,12 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => StudentProfile()));
+            },
             leading: Icon(Icons.person),
             title: Text(
               "Profil",
@@ -47,6 +54,12 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => TeacherSettings()));
+            },
             leading: Icon(Icons.settings),
             title: Text(
               "Ayarlar",
@@ -58,7 +71,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => Yoklama()));
+                      builder: (BuildContext context) => LoginScreen()));
             },
             leading: Icon(Icons.exit_to_app),
             title: Text(

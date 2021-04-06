@@ -19,9 +19,10 @@ class Baslangic extends StatelessWidget {
       theme: Provider.of<ThemeDataModal>(context).getThemeData,
       debugShowCheckedModeBanner: false,
       home: AnimatedSplashScreen(
-        //aadasdaaa
-        splash: Image(image: AssetImage('images/logo.png')),
-        nextScreen: Yoklama(),
+        animationDuration: Duration(seconds: 2),
+        splash: Hero(
+            tag: "tag", child: Image(image: AssetImage('images/logo.png'))),
+        nextScreen: LoginScreen(),
         splashTransition: SplashTransition.slideTransition,
       ),
     );

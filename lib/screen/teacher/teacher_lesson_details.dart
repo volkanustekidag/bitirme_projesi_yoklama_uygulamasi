@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:yoklama/screen/teacher/teacher_signature.dart';
-import 'package:yoklama/screen/teacher/teacher_student.dart';
+import 'package:yoklama/screen/teacher/teacher_student_list.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'teacher_notification.dart';
 
@@ -22,7 +22,7 @@ class _TeacherLessonDetailsState extends State<TeacherLessonDetails> {
 
   List<Widget> widgetOptions = [
     TeacherNotification(),
-    TeacherStudent(),
+    TeacherStudentList(),
     TeacherSignature()
   ];
 

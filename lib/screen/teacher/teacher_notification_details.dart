@@ -20,48 +20,58 @@ class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
           style: TextStyle(fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: <Widget>[
               Container(
-                width: 60,
-                height: 60,
-                margin: EdgeInsets.only(
-                  top: 15,
-                ),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image:
-                            NetworkImage('https://i.hizliresim.com/kEpByj.jpg'),
-                        fit: BoxFit.fill)),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Ali Arı',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '13:29 6.01.2021',
-                    style: TextStyle(
-                      fontSize: 14,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('images/ali.jpg'),
+                          maxRadius: 30,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Ali Arı',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '13:29 6.01.2021',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: Container(child: Icon(Icons.more_horiz)))
+                  ],
+                ),
               ),
-              Container(child: Icon(Icons.more_horiz))
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                child: Text(
+                    "Bitirme Projesi için bu hafta sunum yapılmayacaktıry. Sınav dolayısıyla sunumu haftaya erteledi"),
+              )
             ],
           ),
-          Container(
-            padding: EdgeInsets.only(top: 10, left: 20, right: 20),
-            child: Text(
-                "Bitirme Projesi için bu hafta sunum yapılmayacaktır. Sınav dolayısıyla sunumu haftaya erteledik. \n\n Saygılarımla"),
-          )
-        ],
+        ),
       ),
     );
   }

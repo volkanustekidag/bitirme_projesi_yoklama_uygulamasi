@@ -52,15 +52,15 @@ class _TeacherSignatureState extends State<TeacherSignature> {
               child: Column(
                 children: [
                   Icon(
-                    Icons.person_search,
-                    size: 50,
+                    Icons.person_pin,
+                    size: 30,
+                    color: Colors.black38,
                   ),
                   Text(
-                    'Henüz yoklama alınmamış!',
+                    'Henüz yoklama alınmamış.',
                     style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: 'OpenSans',
-                      fontSize: 25.00,
+                      fontSize: 20.00,
                     ),
                   )
                 ],
