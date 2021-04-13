@@ -42,7 +42,7 @@ class StudentProfile extends StatelessWidget {
                 Positioned(
                   bottom: 0,
                   child: Hero(
-                    tag: "ali",
+                    tag: "volkan",
                     child: Container(
                       width: 120,
                       height: 120,

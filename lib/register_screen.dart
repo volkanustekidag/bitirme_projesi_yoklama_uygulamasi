@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:yoklama/screen/student/student_%20new_users.dart';
 import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
 import 'package:yoklama/utilities/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -8,8 +10,11 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   int menuItemValue;
-  String adSoyad;
+
+  String adSoyad, email, pass;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +92,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 15.0,
                   ),
                   InputTextBox(
+                    onChanged: (val) {
+                      email = val;
+                    },
                     boxTitle: 'Email',
                     boxIcon: Icon(
                       Icons.email,
@@ -100,6 +108,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 15.0,
                   ),
                   InputTextBox(
+                      onChanged: (val) {
+                        setState(() {
+                          pass = val;
+                        });
+                      },
                       boxTitle: 'Şifre',
                       boxIcon: Icon(
                         Icons.lock_rounded,
@@ -171,13 +184,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Button(
                         buttonName: "KAYDOL",
                         onPress: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      TeacherNewUserDetails(
-                                        teacherNameSurname: adSoyad,
-                                      )));
+                          _firebaseAuth.createUserWithEmailAndPassword(
+                              email: email, password: pass);
+                          if (menuItemValue == 1) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        StundentNewUsers(
+                                          studentNameSurname: adSoyad,
+                                        )));
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        TeacherNewUserDetails(
+                                          teacherNameSurname: adSoyad,
+                                        )));
+                          }
                         },
                       )),
                 ],
