@@ -4,6 +4,9 @@ import 'package:yoklama/screen/student/student_profile.dart';
 import 'package:yoklama/screen/teacher/teacher_settings.dart';
 
 class MainDrawer extends StatelessWidget {
+  final file = NetworkImage(
+      "https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/data%2Fuser%2F0%2Fcom.example.bitirme_projesi_yoklama_uygulamasi%2Fcache%2Fimage_picker1141978280799298666.jpg?alt=media&token=41840038-de91-467c-ab6c-f4c7891400a8");
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -21,10 +24,7 @@ class MainDrawer extends StatelessWidget {
                   children: <Widget>[
                     Hero(
                       tag: "volkan",
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage('images/volkan.jpg'),
-                      ),
+                      child: CircleAvatar(radius: 50, backgroundImage: file),
                     ),
                     Text("Volkan Üstekidağ",
                         style: TextStyle(

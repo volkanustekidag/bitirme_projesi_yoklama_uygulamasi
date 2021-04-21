@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yoklama/module/theme_data_modal.dart';
@@ -14,7 +15,7 @@ void main() {
 class Baslangic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //deneme22222
+    Firebase.initializeApp();
     return MaterialApp(
       theme: Provider.of<ThemeDataModal>(context).getThemeData,
       debugShowCheckedModeBanner: false,

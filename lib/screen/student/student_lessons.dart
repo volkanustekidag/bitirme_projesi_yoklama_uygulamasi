@@ -1,17 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
 import 'package:yoklama/module/lesson.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/screen/student/student_lessons_detail.dart';
 import 'package:yoklama/screen/student/student_main_drawer.dart';
-import 'package:yoklama/screen/teacher/teacher_lesson_details.dart';
 import 'package:yoklama/utilities/constants.dart';
 
 class StudentLessons extends StatefulWidget {
+  final Student student;
+
+  const StudentLessons({Key key, this.student}) : super(key: key);
+
   @override
-  _StudentLessonsState createState() => _StudentLessonsState();
+  _StudentLessonsState createState() => _StudentLessonsState(this.student);
 }
 
 class _StudentLessonsState extends State<StudentLessons> {
+  final Student student;
+
   @override
   final GlobalKey<AnimatedListState> key = GlobalKey();
 
@@ -21,6 +29,13 @@ class _StudentLessonsState extends State<StudentLessons> {
   ];
 
   String lessonName = "", lessonPerson = "", numberOfStudents = "";
+
+  _StudentLessonsState(this.student);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +60,7 @@ class _StudentLessonsState extends State<StudentLessons> {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: () {
+                  print(FirebaseAuth.instance.currentUser.uid.toString());
                   buildShowModalBottomSheet(context);
                 },
                 elevation: 5.0,
@@ -67,7 +83,7 @@ class _StudentLessonsState extends State<StudentLessons> {
                     Text(
                       'Derse Katıl',
                       style: TextStyle(
-                        color: Color(0xFF478DE0),
+                        color: ThemeData().primaryColor,
                         fontFamily: 'OpenSans',
                         fontSize: 18.00,
                         fontWeight: FontWeight.w900,

@@ -1,8 +1,13 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/screen/student/student_%20new_users.dart';
+import 'package:yoklama/screen/student/student_lessons.dart';
 import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
 import 'package:yoklama/utilities/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -12,12 +17,13 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  int menuItemValue;
+  String menuItemValue;
 
   String adSoyad, email, pass;
 
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -100,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Icons.email,
                       color: Colors.white,
                     ),
-                    textHint: "hintText",
+                    textHint: "E-mail",
                     textInputType: TextInputType.emailAddress,
                     obscureControl: false,
                   ),
@@ -125,6 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 15.0,
                   ),
                   InputTextBox(
+                      onChanged: (val) {},
                       boxTitle: 'Tekrar Şifre',
                       boxIcon: Icon(
                         Icons.lock_rounded,
@@ -136,79 +143,119 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 15.0,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFF478DE0),
-                    ),
-                    child: DropdownButton<int>(
-                      dropdownColor: Color(0xFF478DE0),
-                      isExpanded: true,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.white,
-                      ),
-                      value: menuItemValue,
-                      hint: Text(
-                        "Üye tipi seçiniz.",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                  SelecetionUserTypeDropdownButton(
                       onChanged: (value) {
                         setState(() {
                           menuItemValue = value;
                         });
                       },
-                      items: [
-                        DropdownMenuItem(
-                          child: Text(
-                            "Öğrenci",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                            child: Text(
-                              "Öğretmen",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            value: 2)
-                      ],
-                    ),
-                  ),
+                      menuItemValue: menuItemValue),
                   SizedBox(
                     height: 10.0,
                   ),
-                  Container(
-                      padding: EdgeInsets.symmetric(vertical: 25.0),
-                      width: double.infinity,
-                      child: Button(
-                        buttonName: "KAYDOL",
-                        onPress: () {
-                          _firebaseAuth.createUserWithEmailAndPassword(
-                              email: email, password: pass);
-                          if (menuItemValue == 1) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        StundentNewUsers(
-                                          studentNameSurname: adSoyad,
-                                        )));
-                          } else {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        TeacherNewUserDetails(
-                                          teacherNameSurname: adSoyad,
-                                        )));
-                          }
-                        },
-                      )),
+                  Button(
+                    buttonName: "KAYDOL",
+                    onPress: () {
+                      if (menuItemValue.contains('Öğrenci')) {
+                        registerStundetUser();
+                      } else {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    TeacherNewUserDetails(
+                                      teacherNameSurname: adSoyad,
+                                    )));
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> registerStundetUser() async {
+    Firebase.initializeApp();
+    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
+
+    String studentUID = FirebaseAuth.instance.currentUser.uid.toString();
+
+    Student student = new Student(studentUID, adSoyad, email, "", "", null);
+
+    DocumentReference firebaseFirestore =
+        FirebaseFirestore.instance.collection('students').doc(studentUID);
+
+    firebaseFirestore
+        .set({
+          'uid': studentUID,
+          'ad_soyad': adSoyad,
+          'email': email,
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => StundentNewUsers(
+                  student: student,
+                )));
+    return;
+  }
+
+  Future registerTeacherUser(String email, String pass) async {
+    Firebase.initializeApp();
+    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
+  }
+}
+
+class SelecetionUserTypeDropdownButton extends StatelessWidget {
+  const SelecetionUserTypeDropdownButton({
+    Key key,
+    @required this.menuItemValue,
+    this.onChanged,
+  }) : super(key: key);
+
+  final String menuItemValue;
+  final Function onChanged;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Color(0xFF478DE0),
+      ),
+      child: DropdownButton<String>(
+        dropdownColor: Color(0xFF478DE0),
+        isExpanded: true,
+        icon: Icon(
+          Icons.arrow_drop_down,
+          color: Colors.white,
+        ),
+        value: menuItemValue,
+        hint: Text(
+          "Üye tipi seçiniz.",
+          style: TextStyle(color: Colors.white),
+        ),
+        onChanged: onChanged,
+        items: [
+          DropdownMenuItem(
+            child: Text(
+              "Öğrenci",
+              style: TextStyle(color: Colors.white),
+            ),
+            value: 'Öğrenci',
+          ),
+          DropdownMenuItem(
+              child: Text(
+                "Öğretmen",
+                style: TextStyle(color: Colors.white),
+              ),
+              value: 'Öğretmen')
         ],
       ),
     );

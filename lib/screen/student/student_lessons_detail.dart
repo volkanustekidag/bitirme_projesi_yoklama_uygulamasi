@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yoklama/screen/student/student_notification.dart';
 import 'package:yoklama/screen/student/student_signatures.dart';
 import 'package:yoklama/screen/student/student_student_list.dart';
-import 'package:yoklama/screen/teacher/teacher_notification.dart';
 
 class StudentLessonDetails extends StatefulWidget {
   @override

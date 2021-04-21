@@ -1,32 +1,38 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/screen/student/student_lessons.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/utilities/widgets.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class StundentNewUsers extends StatefulWidget {
-  final String studentNameSurname;
+  final Student student;
 
-  const StundentNewUsers({Key key, this.studentNameSurname}) : super(key: key);
+  const StundentNewUsers({Key key, this.student}) : super(key: key);
 
   @override
   _StundentNewUsersState createState() =>
-      _StundentNewUsersState(studentNameSurname: studentNameSurname);
+      _StundentNewUsersState(student: student);
 }
 
 class _StundentNewUsersState extends State<StundentNewUsers> {
+  final Student student;
+  String urlimage;
+
   String studentNameSurname;
   int pageCount = 0;
   PageController pageController = PageController(initialPage: 0);
-  _StundentNewUsersState({@required this.studentNameSurname});
+  _StundentNewUsersState({@required this.student});
 
   @override
   void initState() {
     super.initState();
 
-    var nameSurname = studentNameSurname.split(" ");
+    var nameSurname = student.nameSurname.split(" ");
 
     studentNameSurname =
         ((nameSurname[0])[0] + (nameSurname[1])[0]).toUpperCase();
@@ -49,7 +55,23 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
     });
   }
 
-  int onChangedValue;
+  Future uploadProfileImage() async {
+    Reference firebaseStorage = FirebaseStorage.instance
+        .ref()
+        .child("/usersprofilephoto/${student.UId}");
+
+    UploadTask uploadTask = firebaseStorage.putFile(_image);
+
+    var url =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+
+    setState(() {
+      urlimage = url.toString();
+      print(urlimage);
+    });
+  }
+
+  String onChangedValue;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +162,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
             padding: EdgeInsets.only(left: 10, right: 10),
             child: Button(
                 onPress: () {
+                  uploadProfileImage();
                   pageController.animateToPage(
                     1,
                     duration: const Duration(milliseconds: 400),
@@ -175,7 +198,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
             ],
           ),
           Text(
-            " Ünvan seçiniz.",
+            "Bölüm",
             style: TextStyle(
                 fontSize: 15, color: Colors.white, fontFamily: 'OpenSans'),
           ),
@@ -188,11 +211,11 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
-                child: DropdownButton<int>(
+                child: DropdownButton<String>(
                     isExpanded: true,
                     dropdownColor: Colors.white,
                     hint: Text(
-                      " Bölüm seçiniz.",
+                      "Bölüm seçiniz.",
                       style: TextStyle(color: Colors.black),
                     ),
                     value: onChangedValue,
@@ -202,12 +225,18 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
                       });
                     },
                     items: [
-                      buildDropdownMenuItem("Bilgisayar Mühendilis", 1),
-                      buildDropdownMenuItem("İnşaat Mühendilis", 2),
-                      buildDropdownMenuItem("Biyomedikal Mühendilis", 3),
-                      buildDropdownMenuItem("Kimya Mühendilis", 4),
-                      buildDropdownMenuItem("İnşaat Mühendilis", 5),
-                      buildDropdownMenuItem("Makine Mühendilis", 6),
+                      buildDropdownMenuItem(
+                          "Bilgisayar Mühendisliği", "Bilgisayar Mühendisliği"),
+                      buildDropdownMenuItem(
+                          "İnşaat Mühendisliği", "İnşaat Mühendisliği"),
+                      buildDropdownMenuItem("Biyomedikal Mühendisliği",
+                          "Biyomedikal Mühendisliği"),
+                      buildDropdownMenuItem(
+                          "Kimya Mühendisliği", "Kimya Mühendisliği"),
+                      buildDropdownMenuItem(
+                          "İnşaat Mühendisliği", "İnşaat Mühendisliği"),
+                      buildDropdownMenuItem(
+                          "Makine Mühendisliği", "Makine Mühendisliği"),
                     ]),
               ),
             ),
@@ -216,6 +245,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
             padding: EdgeInsets.all(10),
             child: Button(
                 onPress: () {
+                  studentUserUpdate();
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -226,7 +256,26 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
         ]));
   }
 
-  DropdownMenuItem<int> buildDropdownMenuItem(String departmanName, int val) {
+  Future<String> getImageUrl() {}
+
+  Future<void> studentUserUpdate() async {
+    DocumentReference studentDoc =
+        FirebaseFirestore.instance.collection("students").doc(student.UId);
+
+    studentDoc
+        .set({
+          'uid': student.UId,
+          'ad_soyad': student.nameSurname,
+          'email': student.mail,
+          'departman': onChangedValue,
+          'image_url': urlimage,
+        })
+        .whenComplete(() => null)
+        .onError((error, stackTrace) => print("hata"));
+  }
+
+  DropdownMenuItem<String> buildDropdownMenuItem(
+      String departmanName, String val) {
     return DropdownMenuItem(
       value: val,
       child: Text(
@@ -255,7 +304,6 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
                 IconButton(
                     onPressed: () {
                       getCameraPhoto();
-
                       Navigator.pop(context);
                     },
                     icon: Icon(Icons.camera_alt, color: Colors.black)),

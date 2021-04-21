@@ -8,7 +8,6 @@ import 'package:yoklama/utilities/widgets.dart';
 
 class TeacherNewUserDetails extends StatefulWidget {
   final String teacherNameSurname;
-
   TeacherNewUserDetails({@required this.teacherNameSurname});
 
   @override

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:yoklama/forgot_pass_view.dart';
@@ -17,7 +19,9 @@ GlobalKey<FormState> formKey;
 GlobalKey<ScaffoldState> scaffoldKey;
 
 class _LoginScreenState extends State<LoginScreen> {
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String girisTipi = 'ÖĞRENCİ', hintText = '00000000000@ogr.inonu.edu.tr';
+  String adSoyad, email, pass;
 
   int value = 0;
 
@@ -101,6 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: <Widget>[
                         InputTextBox(
+                          onChanged: (val) {
+                            email = val;
+                          },
                           boxTitle: 'Email',
                           boxIcon: Icon(
                             Icons.email,
@@ -114,6 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 30.0,
                         ),
                         InputTextBox(
+                            onChanged: (val) {
+                              pass = val;
+                            },
                             boxTitle: 'Şifre',
                             boxIcon: Icon(
                               Icons.lock_rounded,
@@ -150,28 +160,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   Button(
                     buttonName: "Giriş Yap",
                     onPress: () {
-                      setState(() {
-                        if (!formKey.currentState.validate()) {
-                          print('hata');
-                          scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text('Hatalı girişi'),
-                          ));
-                        } else {
-                          if (value == 0) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        StudentLessons()));
-                          } else {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        TeacherLessons()));
-                          }
-                        }
-                      });
+                      // _firebaseAuth.signInWithEmailAndPassword(
+                      //     email: email, password: pass);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  StudentLessons()));
+
+                      // setState(() {
+                      //   if (!formKey.currentState.validate()) {
+                      //     print('hata');
+                      //     scaffoldKey.currentState.showSnackBar(SnackBar(
+                      //       content: Text('Hatalı girişi'),
+                      //     ));
+                      //   } else {
+                      //     if (value == 0) {
+                      //       Navigator.pushReplacement(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (BuildContext context) =>
+                      //                   StudentLessons()));
+                      //     } else {
+                      //       Navigator.pushReplacement(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (BuildContext context) =>
+                      //                   TeacherLessons()));
+                      //     }
+                      //   }
+                      // });
                     },
                   ),
                   SizedBox(

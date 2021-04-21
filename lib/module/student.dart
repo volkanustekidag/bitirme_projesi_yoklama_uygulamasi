@@ -1,12 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yoklama/module/lesson.dart';
+
 class Student {
-  final int studentId;
-  final String studentNameSurname, mail, department, imageUrl;
+  final String nameSurname, mail, department, imageUrl, UId;
+  final Lesson lesson;
 
   Student(
-    this.studentId,
-    this.studentNameSurname,
+    this.UId,
+    this.nameSurname,
     this.mail,
     this.department,
     this.imageUrl,
+    this.lesson,
   );
+
+  Student getStudent(String getUID) {
+    FirebaseFirestore.instance.collection('students').doc(getUID).get();
+  }
 }
