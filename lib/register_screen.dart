@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:yoklama/module/student.dart';
+import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/student/student_%20new_users.dart';
 import 'package:yoklama/screen/student/student_lessons.dart';
 import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
@@ -159,13 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (menuItemValue.contains('Öğrenci')) {
                         registerStundetUser();
                       } else {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    TeacherNewUserDetails(
-                                      teacherNameSurname: adSoyad,
-                                    )));
+                        registerTeacherUser();
                       }
                     },
                   ),
@@ -178,9 +173,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Future<void> registerTeacherUser() async {
+    Firebase.initializeApp();
+
+    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
+
+    print(FirebaseAuth.instance.currentUser.uid.toString());
+
+    String teacherUID = FirebaseAuth.instance.currentUser.uid.toString();
+
+    Teacher teacher = new Teacher(teacherUID, adSoyad, email, "", "", null);
+
+    DocumentReference firebaseFirestore =
+        FirebaseFirestore.instance.collection("teachers").doc(teacherUID);
+
+    firebaseFirestore
+        .set({
+          'uid': teacher.teacherId,
+          'ad_soyad': teacher.teacherNameSurname,
+          'email': email,
+        })
+        .then((value) => print("user added"))
+        .catchError((error) => print("failed"));
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TeacherNewUserDetails(teacher: teacher)));
+    return;
+  }
+
   Future<void> registerStundetUser() async {
     Firebase.initializeApp();
-    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
+    _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: pass)
+        .then((value) => null);
 
     String studentUID = FirebaseAuth.instance.currentUser.uid.toString();
 
@@ -205,11 +232,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   student: student,
                 )));
     return;
-  }
-
-  Future registerTeacherUser(String email, String pass) async {
-    Firebase.initializeApp();
-    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
   }
 }
 

@@ -256,8 +256,6 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
         ]));
   }
 
-  Future<String> getImageUrl() {}
-
   Future<void> studentUserUpdate() async {
     DocumentReference studentDoc =
         FirebaseFirestore.instance.collection("students").doc(student.UId);

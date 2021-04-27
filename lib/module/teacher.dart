@@ -1,8 +1,7 @@
 import 'package:yoklama/module/lesson.dart';
 
 class Teacher {
-  final int teacherId;
-  final String teacherNameSurname, mail, degree, imageUrl;
+  final String teacherNameSurname, mail, degree, imageUrl, teacherId;
   final Lesson lesson;
 
   Teacher(

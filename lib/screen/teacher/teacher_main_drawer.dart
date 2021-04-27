@@ -23,7 +23,8 @@ class MainDrawer extends StatelessWidget {
                       tag: "ali",
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage('images/ali.jpg'),
+                        backgroundImage: NetworkImage(
+                            'https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/usersprofilephoto%2FJAjQaTdSWqOcT7yHyrHjePZ3ezZ2?alt=media&token=e904e02d-d548-4ea1-a27d-33471647c907'),
                       ),
                     ),
                     Text("Ali ARI",

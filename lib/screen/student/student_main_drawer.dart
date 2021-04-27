@@ -5,7 +5,7 @@ import 'package:yoklama/screen/teacher/teacher_settings.dart';
 
 class MainDrawer extends StatelessWidget {
   final file = NetworkImage(
-      "https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/data%2Fuser%2F0%2Fcom.example.bitirme_projesi_yoklama_uygulamasi%2Fcache%2Fimage_picker1141978280799298666.jpg?alt=media&token=41840038-de91-467c-ab6c-f4c7891400a8");
+      "https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/usersprofilephoto%2FlwjXNWJCvfXLttJEfKtKv8e4Czr1?alt=media&token=4f4db20a-99b2-413c-8c21-054d7c1a0b6a");
 
   @override
   Widget build(BuildContext context) {
