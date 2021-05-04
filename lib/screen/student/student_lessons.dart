@@ -24,8 +24,16 @@ class _StudentLessonsState extends State<StudentLessons> {
   final GlobalKey<AnimatedListState> key = GlobalKey();
 
   List<Lesson> items = [
-    new Lesson('Bitirme Projesi', 'Davut Hanbay', 65),
-    new Lesson('Bilgisayar Müh. G. I', 'Kenan İnce', 30),
+    new Lesson(
+        departmentName: "EXAM",
+        lessonName: "AAA",
+        lessonPersonUID: "AAA",
+        percent: "AAA"),
+    new Lesson(
+        departmentName: "EXAM",
+        lessonName: "AAA",
+        lessonPersonUID: "AAA",
+        percent: "AAA"),
   ];
 
   String lessonName = "", lessonPerson = "", numberOfStudents = "";
@@ -143,7 +151,13 @@ class _StudentLessonsState extends State<StudentLessons> {
                         onTap: () {
                           setState(() {
                             items.insert(
-                                0, new Lesson(lessonName, lessonPerson, 52));
+                              0,
+                              new Lesson(
+                                  departmentName: "EXAM",
+                                  lessonName: "AAA",
+                                  lessonPersonUID: "AAA",
+                                  percent: "AAA"),
+                            );
                             key.currentState.insertItem(0);
                             Navigator.pop(context);
                           });
@@ -194,7 +208,7 @@ Widget _buildItem(
           item.lessonName,
           style: null,
         ),
-        subtitle: Text(item.numberOfStudents.toString() + " Öğrenci"),
+        subtitle: Text("10 Öğrenci"),
         trailing: IconButton(
           icon: Icon(Icons.book),
           onPressed: () {},

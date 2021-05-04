@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yoklama/services/auth.dart';
+import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/utilities/widgets.dart';
 
 class ForgotPassView extends StatefulWidget {
@@ -6,31 +8,15 @@ class ForgotPassView extends StatefulWidget {
   _ForgotPassViewState createState() => _ForgotPassViewState();
 }
 
+String email;
+
 class _ForgotPassViewState extends State<ForgotPassView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [
-                    0.1,
-                    0.4,
-                    0.7,
-                    0.9
-                  ],
-                      colors: [
-                    Color(0xFF73AEF5),
-                    Color(0xFF61A4F1),
-                    Color(0xFF478DE0),
-                    Color(0xFF398AE5),
-                  ]))),
+          Background(),
           Container(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
@@ -40,44 +26,24 @@ class _ForgotPassViewState extends State<ForgotPassView> {
               ),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        )),
-                  ),
+                  BackScreenIconButton(),
                   SizedBox(
                     height: 40,
                   ),
-                  Text(
-                    "Şifremi Unuttum",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'OpenSans',
-                      fontSize: 25.0,
-                    ),
-                  ),
+                  ForgotPassTitleText(),
                   SizedBox(
                     height: 15,
                   ),
-                  InputTextBox(
-                      boxTitle: "boxTitle",
-                      boxIcon: Icon(
-                        Icons.mail,
-                        color: Colors.white,
-                      ),
-                      textHint: "Mail",
-                      textInputType: TextInputType.emailAddress,
-                      obscureControl: false),
+                  EmailPassInputTextBox(),
                   SizedBox(
                     height: 15,
                   ),
-                  Button(buttonName: "Şifremi Sıfırla", onPress: () {}),
+                  Button(
+                      buttonName: "Şifremi Sıfırla",
+                      onPress: () {
+                        Authentication authentication = new Authentication();
+                        authentication.forgotPassword(email);
+                      }),
                 ],
               ),
             ),
@@ -85,5 +51,79 @@ class _ForgotPassViewState extends State<ForgotPassView> {
         ],
       ),
     );
+  }
+}
+
+class EmailPassInputTextBox extends StatelessWidget {
+  const EmailPassInputTextBox({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+        onChanged: (val) {
+          email = val;
+        },
+        boxIcon: Icon(
+          Icons.mail,
+          color: Colors.white,
+        ),
+        textHint: "E-Mail",
+        textInputType: TextInputType.emailAddress,
+        obscureControl: false);
+  }
+}
+
+class ForgotPassTitleText extends StatelessWidget {
+  const ForgotPassTitleText({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Şifremi Unuttum",
+      style: TextStyle(
+        color: Colors.white,
+        fontFamily: 'OpenSans',
+        fontSize: 25.0,
+      ),
+    );
+  }
+}
+
+class BackScreenIconButton extends StatelessWidget {
+  const BackScreenIconButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      child: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          )),
+    );
+  }
+}
+
+class Background extends StatelessWidget {
+  const Background({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: linearGradientBox);
   }
 }

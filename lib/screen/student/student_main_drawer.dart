@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:yoklama/screen/login_screen.dart';
 import 'package:yoklama/screen/student/student_profile.dart';
@@ -17,7 +19,7 @@ class MainDrawer extends StatelessWidget {
           children: <Widget>[
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(30),
               color: Theme.of(context).primaryColor,
               child: Center(
                 child: Column(
@@ -67,6 +69,7 @@ class MainDrawer extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

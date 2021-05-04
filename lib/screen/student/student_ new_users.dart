@@ -32,7 +32,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
   void initState() {
     super.initState();
 
-    var nameSurname = student.nameSurname.split(" ");
+    var nameSurname = student.studentNameSurname.split(" ");
 
     studentNameSurname =
         ((nameSurname[0])[0] + (nameSurname[1])[0]).toUpperCase();
@@ -58,7 +58,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
   Future uploadProfileImage() async {
     Reference firebaseStorage = FirebaseStorage.instance
         .ref()
-        .child("/usersprofilephoto/${student.UId}");
+        .child("/usersprofilephoto/${student.studentUID}");
 
     UploadTask uploadTask = firebaseStorage.putFile(_image);
 
@@ -76,7 +76,7 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: LinearGradientBox,
+        decoration: linearGradientBox,
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 100),
         child: PageView(
@@ -257,14 +257,15 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
   }
 
   Future<void> studentUserUpdate() async {
-    DocumentReference studentDoc =
-        FirebaseFirestore.instance.collection("students").doc(student.UId);
+    DocumentReference studentDoc = FirebaseFirestore.instance
+        .collection("students")
+        .doc(student.studentUID);
 
     studentDoc
         .set({
-          'uid': student.UId,
-          'ad_soyad': student.nameSurname,
-          'email': student.mail,
+          'uid': student.studentUID,
+          'ad_soyad': student.studentNameSurname,
+          'email': student.studentMail,
           'departman': onChangedValue,
           'image_url': urlimage,
         })

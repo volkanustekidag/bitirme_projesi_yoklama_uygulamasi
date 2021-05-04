@@ -1,8 +1,12 @@
+import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/teacher/teacher_main_drawer.dart';
+import 'package:yoklama/services/lesson_database.dart';
+import 'package:yoklama/services/teacher_user_database_crud.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
+import 'package:yoklama/utilities/widgets.dart';
 import 'teacher_lesson_details.dart';
 
 class TeacherLessons extends StatefulWidget {
@@ -12,29 +16,46 @@ class TeacherLessons extends StatefulWidget {
 
 class _TeacherLessonsState extends State<TeacherLessons> {
   int selectedIndex = 0;
+  Lesson lesson = new Lesson();
+  Teacher teacher;
 
   final GlobalKey<AnimatedListState> key = GlobalKey();
 
-  List<Lesson> items = [
-    new Lesson('Bitirme Projesi', 'Davut Hanbay', 65),
-    new Lesson('Bilgisayar Müh. G. I', 'Kenan İnce', 30),
-  ];
+  List<Lesson> items = [];
 
   String lessonName = "", lessonPerson = "", numberOfStudents = "";
+  bool loading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLessons().then((value) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  Future<void> getLessons() async {
+    teacher = await teacherUserGetData();
+    for (String item in teacher.teacherLesson) {
+      print(item);
+      items.add(await getLesson(item));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Row(children: <Widget>[
-            Text(
-              'Dersler',
-              style: TextStyle(
-                  fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
-            ),
-          ]),
-        ),
+        title: Row(children: <Widget>[
+          Text(
+            'Dersler',
+            style:
+                TextStyle(fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
+          ),
+        ]),
       ),
       drawer: MainDrawer(),
       body: Stack(children: <Widget>[
@@ -45,6 +66,7 @@ class _TeacherLessonsState extends State<TeacherLessons> {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: () {
+                  teacherUserGetData();
                   buildShowModalBottomSheet(context);
                 },
                 elevation: 5.0,
@@ -78,14 +100,15 @@ class _TeacherLessonsState extends State<TeacherLessons> {
               ),
             ),
             Expanded(
-              child: AnimatedList(
-                key: key,
-                initialItemCount: items.length,
-                itemBuilder: (context, index, animation) {
-                  return _buildItem(items[index], animation, index, context);
-                },
-              ),
-            )
+                child: loading == true
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemBuilder: (context, index) =>
+                            _buildItem(items[index], index, context),
+                        itemCount: items.length,
+                      ))
           ],
         ),
       ]),
@@ -105,13 +128,13 @@ class _TeacherLessonsState extends State<TeacherLessons> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15.0),
                       topRight: Radius.circular(15.0))),
-              child: Column(children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Column(children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      GestureDetector(
                           onTap: () {
                             setState(() {
                               Navigator.pop(context);
@@ -120,117 +143,66 @@ class _TeacherLessonsState extends State<TeacherLessons> {
                           child: Icon(
                             Icons.close,
                           )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
+                      GestureDetector(
+                        onTap: () async {
+                          createLesson(lesson);
                           setState(() {
-                            items.insert(
-                                0, new Lesson(lessonName, lessonPerson, 52));
-                            key.currentState.insertItem(0);
-                            Navigator.pop(context);
+                            items.add(lesson);
                           });
+                          Navigator.pop(context);
                         },
                         child: Text('+Oluştur',
                             style:
                                 TextStyle(fontSize: 20, color: kBlueFontToune)),
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    child: TextField(
-                      onChanged: (text) {
-                        lessonName = text;
+                    ],
+                  ),
+                  InputTextBox(
+                      onChanged: (val) {
+                        lesson.lessonName = val;
                       },
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Ders Adı',
-                        hintStyle: TextStyle(color: Colors.white60),
-                        prefixIcon: Icon(Icons.book, color: Colors.white),
+                      boxIcon: Icon(
+                        Icons.book,
+                        color: Colors.white,
                       ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    child: TextField(
-                      onChanged: (text) {
-                        lessonPerson = text;
+                      textHint: "Ders Adı",
+                      textInputType: null,
+                      obscureControl: false),
+                  InputTextBox(
+                      onChanged: (val) {
+                        lesson.departmentName = val;
                       },
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      decoration: InputDecoration(
-                        hintText: 'Bölüm Adı',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.white60),
-                        prefixIcon:
-                            Icon(Icons.school_sharp, color: Colors.white),
+                      boxIcon: Icon(
+                        Icons.school,
+                        color: Colors.white,
                       ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    child: TextField(
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white60),
-                        border: InputBorder.none,
-                        hintText: 'Devamsızlık Yüzdelik Şart',
-                        prefixIcon: Icon(Icons.filter_alt_outlined,
-                            color: Colors.white),
-                      ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: kBlueFontToune,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: TextField(
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.white60),
-                        hintText: 'Ders Hakkında Açıklama',
-                        prefixIcon:
-                            Icon(Icons.insert_comment, color: Colors.white),
-                      ),
-                    )),
-                SizedBox(
-                  height: 5,
-                ),
-              ]));
+                      textHint: "Bölüm Adı",
+                      textInputType: null,
+                      obscureControl: false),
+                  InputTextBox(
+                      onChanged: (val) {
+                        lesson.percent = val;
+                      },
+                      boxIcon:
+                          Icon(Icons.filter_alt_outlined, color: Colors.white),
+                      textHint: "Devamsızlık Yüzdelik Şart",
+                      textInputType: TextInputType.number,
+                      obscureControl: false),
+                  InputTextBox(
+                      onChanged: (val) {
+                        lesson.comment = val;
+                      },
+                      boxIcon: Icon(Icons.insert_comment, color: Colors.white),
+                      textHint: "Ders Hakkında Açıklama",
+                      textInputType: null,
+                      obscureControl: false),
+                ]),
+              ));
         });
   }
 }
 
-Widget _buildItem(
-    Lesson item, Animation animation, int index, BuildContext context) {
+Widget _buildItem(Lesson item, int index, BuildContext context) {
   return Container(
     child: Card(
       child: ListTile(
@@ -245,7 +217,7 @@ Widget _buildItem(
           item.lessonName,
           style: null,
         ),
-        subtitle: Text(item.numberOfStudents.toString() + " Öğrenci"),
+        subtitle: Text("10 Öğrenci"),
         trailing: IconButton(
           icon: Icon(Icons.book),
           onPressed: () {},

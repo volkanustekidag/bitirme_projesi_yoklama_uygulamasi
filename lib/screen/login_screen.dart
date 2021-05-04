@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:yoklama/forgot_pass_view.dart';
 import 'package:yoklama/register_screen.dart';
+import 'package:yoklama/services/auth.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/utilities/widgets.dart';
-
 import 'student/student_lessons.dart';
 import 'teacher/teacher_lessons.dart';
 
@@ -19,9 +18,10 @@ GlobalKey<FormState> formKey;
 GlobalKey<ScaffoldState> scaffoldKey;
 
 class _LoginScreenState extends State<LoginScreen> {
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String girisTipi = 'ÖĞRENCİ', hintText = '00000000000@ogr.inonu.edu.tr';
   String adSoyad, email, pass;
+
+  Authentication auth = new Authentication();
 
   int value = 0;
 
@@ -39,11 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
       key: scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: LinearGradientBox,
-          ),
+          Background(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(
@@ -105,127 +101,183 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: formKey,
                     child: Column(
                       children: <Widget>[
-                        InputTextBox(
-                          onChanged: (val) {
-                            email = val;
-                          },
-                          boxTitle: 'Email',
-                          boxIcon: Icon(
-                            Icons.email,
-                            color: Colors.white,
-                          ),
-                          textHint: hintText,
-                          textInputType: TextInputType.emailAddress,
-                          obscureControl: false,
-                        ),
+                        EmailInputTextBox(auth: auth, hintText: hintText),
                         SizedBox(
                           height: 30.0,
                         ),
-                        InputTextBox(
-                            onChanged: (val) {
-                              pass = val;
-                            },
-                            boxTitle: 'Şifre',
-                            boxIcon: Icon(
-                              Icons.lock_rounded,
-                              color: Colors.white,
-                            ),
-                            textHint: '**********',
-                            textInputType: null,
-                            obscureControl: true),
+                        PassInputTextBox(auth: auth),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 15.0,
                   ),
-                  Container(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ForgotPassView()));
-                        },
-                        child: Text(
-                          'Şifremi unuttum.',
-                          style:
-                              TextStyle(fontSize: 12.00, color: Colors.white),
-                        ),
-                      )),
+                  ForgotPassContanier(),
                   SizedBox(
                     height: 10.0,
                   ),
                   Button(
                     buttonName: "Giriş Yap",
                     onPress: () {
-                      // _firebaseAuth.signInWithEmailAndPassword(
-                      //     email: email, password: pass);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  StudentLessons()));
-
-                      // setState(() {
-                      //   if (!formKey.currentState.validate()) {
-                      //     print('hata');
-                      //     scaffoldKey.currentState.showSnackBar(SnackBar(
-                      //       content: Text('Hatalı girişi'),
-                      //     ));
-                      //   } else {
-                      //     if (value == 0) {
-                      //       Navigator.pushReplacement(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (BuildContext context) =>
-                      //                   StudentLessons()));
-                      //     } else {
-                      //       Navigator.pushReplacement(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (BuildContext context) =>
-                      //                   TeacherLessons()));
-                      //     }
-                      //   }
-                      // });
+                      setState(() {
+                        if (!formKey.currentState.validate()) {
+                          print('hata');
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text('Hatalı girişi'),
+                          ));
+                        } else {
+                          if (value == 0) {
+                            auth.signIn().then((value) =>
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            StudentLessons())));
+                          } else {
+                            auth.signIn().then((value) =>
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            TeacherLessons())));
+                          }
+                        }
+                      });
                     },
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Image(
-                          image: AssetImage('images/logo.png'),
-                          height: 50,
-                          width: 50,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        RegisterScreen()));
-                          },
-                          child: Text(
-                            'Kaydolmak istiyorum.',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  RegisterTextContanier(),
                 ],
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class Background extends StatelessWidget {
+  const Background({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      decoration: linearGradientBox,
+    );
+  }
+}
+
+class EmailInputTextBox extends StatelessWidget {
+  const EmailInputTextBox({
+    Key key,
+    @required this.auth,
+    @required this.hintText,
+  }) : super(key: key);
+
+  final Authentication auth;
+  final String hintText;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+      onChanged: (val) {
+        auth.email = val;
+      },
+      boxIcon: Icon(
+        Icons.email,
+        color: Colors.white,
+      ),
+      textHint: hintText,
+      textInputType: TextInputType.emailAddress,
+      obscureControl: false,
+    );
+  }
+}
+
+class PassInputTextBox extends StatelessWidget {
+  const PassInputTextBox({
+    Key key,
+    @required this.auth,
+  }) : super(key: key);
+
+  final Authentication auth;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+        onChanged: (val) {
+          auth.pass = val;
+        },
+        boxIcon: Icon(
+          Icons.lock_rounded,
+          color: Colors.white,
+        ),
+        textHint: '**********',
+        textInputType: null,
+        obscureControl: true);
+  }
+}
+
+class ForgotPassContanier extends StatelessWidget {
+  const ForgotPassContanier({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        alignment: Alignment.centerRight,
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ForgotPassView()));
+          },
+          child: Text(
+            'Şifremi unuttum.',
+            style: TextStyle(fontSize: 12.00, color: Colors.white),
+          ),
+        ));
+  }
+}
+
+class RegisterTextContanier extends StatelessWidget {
+  const RegisterTextContanier({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Image(
+            image: AssetImage('images/logo.png'),
+            height: 50,
+            width: 50,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => RegisterScreen()));
+            },
+            child: Text(
+              'Kaydolmak istiyorum.',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
         ],
       ),
     );

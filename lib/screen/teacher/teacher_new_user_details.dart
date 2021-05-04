@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/teacher/teacher_lessons.dart';
+import 'package:yoklama/services/auth.dart';
+import 'package:yoklama/services/teacher_user_database_crud.dart';
 import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/utilities/widgets.dart';
 
@@ -19,7 +22,7 @@ class TeacherNewUserDetails extends StatefulWidget {
 }
 
 class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
-  final Teacher teacher;
+  Teacher teacher;
   String teacherNameSurname;
   String urlimage;
 
@@ -31,9 +34,10 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
   void initState() {
     super.initState();
 
+    print(teacher.teachertUID);
     var nameSurname = teacher.teacherNameSurname.split(" ");
 
-    String teacherNameSurname =
+    teacherNameSurname =
         ((nameSurname[0])[0] + (nameSurname[1])[0]).toUpperCase();
   }
 
@@ -55,9 +59,11 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
   }
 
   Future uploadProfileImage() async {
-    Reference firebaseStorage = FirebaseStorage.instance
-        .ref()
-        .child("/usersprofilephoto/${teacher.teacherId}");
+    Authentication authentication = new Authentication();
+    String uid = await authentication.getUID();
+    print(uid);
+    Reference firebaseStorage =
+        FirebaseStorage.instance.ref().child("/usersprofilephoto/$uid");
 
     UploadTask uploadTask = firebaseStorage.putFile(_image);
 
@@ -70,12 +76,12 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
     });
   }
 
-  int onChangedValue;
+  String departmentOption;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: LinearGradientBox,
+        decoration: linearGradientBox,
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 100),
         child: PageView(
@@ -173,23 +179,6 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
         ]));
   }
 
-  Future<void> teacherUserUpdate() async {
-    DocumentReference studentDoc = FirebaseFirestore.instance
-        .collection("teachers")
-        .doc(teacher.teacherId);
-
-    studentDoc
-        .set({
-          'uid': teacher.teacherId,
-          'ad_soyad': teacher.teacherNameSurname,
-          'email': teacher.mail,
-          'departman': onChangedValue,
-          'image_url': urlimage,
-        })
-        .whenComplete(() => null)
-        .onError((error, stackTrace) => print("hata"));
-  }
-
   Center buildPageTwo(BuildContext context) {
     return Center(
         child: Column(
@@ -227,36 +216,36 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               child: Center(
-                child: DropdownButton<int>(
+                child: DropdownButton<String>(
                     isExpanded: true,
                     dropdownColor: Colors.white,
                     hint: Text(
                       " Ünvan seçiniz.",
                       style: TextStyle(color: Colors.black),
                     ),
-                    value: onChangedValue,
+                    value: departmentOption,
                     onChanged: (value) {
                       setState(() {
-                        onChangedValue = value;
+                        teacher.teacherDepartment = value;
                       });
                     },
                     items: [
                       DropdownMenuItem(
-                        value: 1,
+                        value: "Prof",
                         child: Text(
                           " Prof.",
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: 2,
+                        value: "Doc",
                         child: Text(
                           " Doç.",
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
                       DropdownMenuItem(
-                        value: 3,
+                        value: "Aras",
                         child: Text(
                           " Araş. Grv.",
                           style: TextStyle(color: Colors.black),
@@ -270,7 +259,7 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
             padding: EdgeInsets.all(10),
             child: Button(
                 onPress: () {
-                  teacherUserUpdate();
+                  teacherUserUpdate(teacher);
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

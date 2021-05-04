@@ -20,7 +20,7 @@ const kLessonCardTextStyle = TextStyle(
 
 const double kDefaulPadding = 20;
 
-const LinearGradientBox = BoxDecoration(
+const linearGradientBox = BoxDecoration(
     gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

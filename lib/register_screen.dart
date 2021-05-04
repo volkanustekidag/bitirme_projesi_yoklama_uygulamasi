@@ -1,14 +1,12 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:yoklama/module/student.dart';
+import 'package:yoklama/forgot_pass_view.dart';
 import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/student/student_%20new_users.dart';
-import 'package:yoklama/screen/student/student_lessons.dart';
 import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
+import 'package:yoklama/services/auth.dart';
+import 'package:yoklama/utilities/constants.dart';
 import 'package:yoklama/utilities/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -16,11 +14,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  String menuItemValue;
-
-  String adSoyad, email, pass;
+  Authentication authentication = Authentication();
+  String userTypeItemValue;
 
   @override
   Widget build(BuildContext context) {
@@ -28,142 +23,75 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  Color(0xFF73AEF5),
-                  Color(0xFF61A4F1),
-                  Color(0xFF478DE0),
-                  Color(0xFF398AE5),
-                ],
-                    stops: [
-                  0.1,
-                  0.4,
-                  0.7,
-                  0.9,
-                ])),
-          ),
+          Background(),
           Container(
             height: double.infinity,
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(
                 horizontal: 30.0,
-                vertical: 40.0,
+                vertical: 50.0,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        )),
-                  ),
-                  Text(
-                    "Kaydol",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'OpenSans',
-                      fontSize: 25.0,
-                    ),
-                  ),
+                  RegisterScreenTextTitle(),
                   SizedBox(
                     height: 15,
                   ),
-                  InputTextBox(
-                      onChanged: (val) {
-                        setState(() {
-                          adSoyad = val;
-                        });
-                      },
-                      boxTitle: "Ad Soyad",
-                      boxIcon: Icon(
-                        Icons.account_box_rounded,
-                        color: Colors.white,
-                      ),
-                      textHint: "Ad Soyad",
-                      textInputType: null,
-                      obscureControl: false),
+                  NameSurnameInputTextBox(authentication: authentication),
                   SizedBox(
                     height: 15.0,
                   ),
-                  InputTextBox(
-                    onChanged: (val) {
-                      email = val;
-                    },
-                    boxTitle: 'Email',
-                    boxIcon: Icon(
-                      Icons.email,
-                      color: Colors.white,
-                    ),
-                    textHint: "E-mail",
-                    textInputType: TextInputType.emailAddress,
-                    obscureControl: false,
-                  ),
+                  EmailInputTextBox(authentication: authentication),
                   SizedBox(
                     height: 15.0,
                   ),
-                  InputTextBox(
-                      onChanged: (val) {
-                        setState(() {
-                          pass = val;
-                        });
-                      },
-                      boxTitle: 'Şifre',
-                      boxIcon: Icon(
-                        Icons.lock_rounded,
-                        color: Colors.white,
-                      ),
-                      textHint: '**********',
-                      textInputType: null,
-                      obscureControl: true),
+                  PassInputTextBox(authentication: authentication),
                   SizedBox(
                     height: 15.0,
                   ),
-                  InputTextBox(
-                      onChanged: (val) {},
-                      boxTitle: 'Tekrar Şifre',
-                      boxIcon: Icon(
-                        Icons.lock_rounded,
-                        color: Colors.white,
-                      ),
-                      textHint: '**********',
-                      textInputType: null,
-                      obscureControl: true),
+                  AgainPassInputTextBox(),
                   SizedBox(
                     height: 15.0,
                   ),
                   SelecetionUserTypeDropdownButton(
                       onChanged: (value) {
                         setState(() {
-                          menuItemValue = value;
+                          userTypeItemValue = value;
                         });
                       },
-                      menuItemValue: menuItemValue),
+                      menuItemValue: userTypeItemValue),
                   SizedBox(
                     height: 10.0,
                   ),
-                  Button(
-                    buttonName: "KAYDOL",
-                    onPress: () {
-                      if (menuItemValue.contains('Öğrenci')) {
-                        registerStundetUser();
-                      } else {
-                        registerTeacherUser();
-                      }
-                    },
+                  RegisterButton(
+                      menuItemValue: userTypeItemValue, auth: authentication),
+                  SizedBox(
+                    height: 15,
                   ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Zaten Bir hesabım var. ",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Giriş Yap!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -172,66 +100,170 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
 
-  Future<void> registerTeacherUser() async {
-    Firebase.initializeApp();
+class Background extends StatelessWidget {
+  const Background({
+    Key key,
+  }) : super(key: key);
 
-    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: pass);
-
-    print(FirebaseAuth.instance.currentUser.uid.toString());
-
-    String teacherUID = FirebaseAuth.instance.currentUser.uid.toString();
-
-    Teacher teacher = new Teacher(teacherUID, adSoyad, email, "", "", null);
-
-    DocumentReference firebaseFirestore =
-        FirebaseFirestore.instance.collection("teachers").doc(teacherUID);
-
-    firebaseFirestore
-        .set({
-          'uid': teacher.teacherId,
-          'ad_soyad': teacher.teacherNameSurname,
-          'email': email,
-        })
-        .then((value) => print("user added"))
-        .catchError((error) => print("failed"));
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => TeacherNewUserDetails(teacher: teacher)));
-    return;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: linearGradientBox,
+    );
   }
+}
 
-  Future<void> registerStundetUser() async {
-    Firebase.initializeApp();
-    _firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: pass)
-        .then((value) => null);
+class RegisterScreenTextTitle extends StatelessWidget {
+  const RegisterScreenTextTitle({
+    Key key,
+  }) : super(key: key);
 
-    String studentUID = FirebaseAuth.instance.currentUser.uid.toString();
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Kaydol",
+      style: TextStyle(
+        color: Colors.white,
+        fontFamily: 'OpenSans',
+        fontSize: 25.0,
+      ),
+    );
+  }
+}
 
-    Student student = new Student(studentUID, adSoyad, email, "", "", null);
+class NameSurnameInputTextBox extends StatelessWidget {
+  const NameSurnameInputTextBox({
+    Key key,
+    @required this.authentication,
+  }) : super(key: key);
 
-    DocumentReference firebaseFirestore =
-        FirebaseFirestore.instance.collection('students').doc(studentUID);
+  final Authentication authentication;
 
-    firebaseFirestore
-        .set({
-          'uid': studentUID,
-          'ad_soyad': adSoyad,
-          'email': email,
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+        onChanged: (val) {
+          authentication.nameSurname = val;
+        },
+        boxIcon: Icon(
+          Icons.account_box_rounded,
+          color: Colors.white,
+        ),
+        textHint: "Ad Soyad",
+        textInputType: null,
+        obscureControl: false);
+  }
+}
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => StundentNewUsers(
-                  student: student,
-                )));
-    return;
+class EmailInputTextBox extends StatelessWidget {
+  const EmailInputTextBox({
+    Key key,
+    @required this.authentication,
+  }) : super(key: key);
+
+  final Authentication authentication;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+      onChanged: (val) {
+        authentication.email = val;
+      },
+      boxIcon: Icon(
+        Icons.email,
+        color: Colors.white,
+      ),
+      textHint: "E-mail",
+      textInputType: TextInputType.emailAddress,
+      obscureControl: false,
+    );
+  }
+}
+
+class PassInputTextBox extends StatelessWidget {
+  const PassInputTextBox({
+    Key key,
+    @required this.authentication,
+  }) : super(key: key);
+
+  final Authentication authentication;
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+        onChanged: (val) {
+          authentication.pass = val;
+        },
+        boxIcon: Icon(
+          Icons.lock_rounded,
+          color: Colors.white,
+        ),
+        textHint: '**********',
+        textInputType: null,
+        obscureControl: true);
+  }
+}
+
+class AgainPassInputTextBox extends StatelessWidget {
+  const AgainPassInputTextBox({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InputTextBox(
+        onChanged: (val) {},
+        boxIcon: Icon(
+          Icons.lock_rounded,
+          color: Colors.white,
+        ),
+        textHint: '**********',
+        textInputType: null,
+        obscureControl: true);
+  }
+}
+
+class RegisterButton extends StatelessWidget {
+  const RegisterButton({
+    Key key,
+    @required this.menuItemValue,
+    @required this.auth,
+  }) : super(key: key);
+
+  final String menuItemValue;
+  final Authentication auth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      buttonName: "KAYDOL",
+      onPress: () {
+        if (menuItemValue.contains('Öğrenci')) {
+          auth.registerUser('students');
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StundentNewUsers(
+                        student: null,
+                      )));
+        } else {
+          auth.registerUser('teachers');
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TeacherNewUserDetails(
+                        teacher: new Teacher(
+                          teacherNameSurname: auth.nameSurname,
+                          teacherMail: auth.email,
+                        ),
+                      )));
+        }
+      },
+    );
   }
 }
 

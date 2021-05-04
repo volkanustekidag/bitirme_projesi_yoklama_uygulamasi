@@ -1,20 +1,36 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yoklama/module/lesson.dart';
-
 class Student {
-  final String nameSurname, mail, department, imageUrl, UId;
-  final Lesson lesson;
+  String studentUID;
+  String studentNameSurname;
+  String studentMail;
+  String studentDepartment;
+  String studentImageUrl;
+  List<String> studentLesson;
 
   Student(
-    this.UId,
-    this.nameSurname,
-    this.mail,
-    this.department,
-    this.imageUrl,
-    this.lesson,
-  );
+      {this.studentUID,
+      this.studentNameSurname,
+      this.studentMail,
+      this.studentDepartment,
+      this.studentImageUrl,
+      this.studentLesson});
 
-  Student getStudent(String getUID) {
-    FirebaseFirestore.instance.collection('students').doc(getUID).get();
+  Student.fromJson(Map<String, dynamic> json) {
+    studentUID = json['studentUID'];
+    studentNameSurname = json['studentNameSurname'];
+    studentMail = json['studentMail'];
+    studentDepartment = json['studentDepartment'];
+    studentImageUrl = json['studentImageUrl'];
+    studentLesson = json['studentLesson'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['studentUID'] = this.studentUID;
+    data['studentNameSurname'] = this.studentNameSurname;
+    data['studentMail'] = this.studentMail;
+    data['studentDepartment'] = this.studentDepartment;
+    data['studentImageUrl'] = this.studentImageUrl;
+    data['studentLesson'] = this.studentLesson;
+    return data;
   }
 }

@@ -49,7 +49,7 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                 width: 8,
               ),
               Text("Dersle ilgili bir duyuru paylaşın...",
-                  style: TextStyle(color: Colors.grey, fontSize: 16)),
+                  style: TextStyle(color: Colors.grey, fontSize: 14)),
             ]),
             onPressed: () {
               sheetBottom(context);
@@ -81,19 +81,17 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     topRight: Radius.circular(15.0))),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.close,
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Icon(
+                        Icons.close,
+                      ),
+                      GestureDetector(
                         onTap: () {
                           key.currentState.insertItem(0);
                           Navigator.pop(context);
@@ -101,43 +99,44 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                         },
                         child: Text("+Paylaş",
                             style:
-                                TextStyle(fontSize: 20, color: kBlueFontToune)),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    SizedBox(
-                      width: 5,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: AssetImage('images/ali.jpg'),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      "Ali Arı",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    )
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.all(5),
-                  child: TextField(
-                    onChanged: (values) {
-                      postContent = values;
-                    },
-                    maxLines: 25,
-                    minLines: 20,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Duyuru hakkında bir şeyler yaz..."),
+                                TextStyle(fontSize: 18, color: kBlueFontToune)),
+                      )
+                    ],
                   ),
-                )
-              ],
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 5,
+                      ),
+                      CircleAvatar(
+                        backgroundImage: AssetImage('images/ali.jpg'),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "Ali Arı",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      )
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(5),
+                    child: TextField(
+                      onChanged: (values) {
+                        postContent = values;
+                      },
+                      maxLines: 25,
+                      minLines: 20,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Duyuru hakkında bir şeyler yaz..."),
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         });

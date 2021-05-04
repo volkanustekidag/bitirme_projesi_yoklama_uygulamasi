@@ -33,7 +33,6 @@ class Button extends StatelessWidget {
 }
 
 class InputTextBox extends StatelessWidget {
-  final String boxTitle;
   final Icon boxIcon;
   final String textHint;
   final Function onChanged;
@@ -41,8 +40,7 @@ class InputTextBox extends StatelessWidget {
   final bool obscureControl;
 
   const InputTextBox(
-      {@required this.boxTitle,
-      @required this.onChanged,
+      {@required this.onChanged,
       @required this.boxIcon,
       @required this.textHint,
       @required this.textInputType,
@@ -64,16 +62,16 @@ class InputTextBox extends StatelessWidget {
           ),
           height: 60.0,
           child: TextFormField(
-            validator: obscureControl
-                ? MultiValidator([
-                    MinLengthValidator(10, errorText: ''),
-                  ])
-                : MultiValidator([
-                    MinLengthValidator(10,
-                        errorText: 'En az 10 karakter girmelisin.'),
-                    EmailValidator(
-                        errorText: 'Geçerli bir email adresi giriniz.')
-                  ]),
+            // validator: obscureControl
+            //     ? MultiValidator([
+            //         MinLengthValidator(10, errorText: ''),
+            //       ])
+            //     : MultiValidator([
+            //         MinLengthValidator(10,
+            //             errorText: 'En az 10 karakter girmelisin.'),
+            //         EmailValidator(
+            //             errorText: 'Geçerli bir email adresi giriniz.')
+            //       ]),
             obscureText: obscureControl,
             keyboardType: textInputType,
             style: TextStyle(color: Colors.white),
