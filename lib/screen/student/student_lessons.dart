@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_unicons/flutter_unicons.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:yoklama/module/student.dart';
 import 'package:yoklama/screen/student/student_lessons_detail.dart';
 import 'package:yoklama/screen/student/student_main_drawer.dart';
+import 'package:yoklama/services/auth.dart';
+import 'package:yoklama/services/lesson_database.dart';
+import 'package:yoklama/services/student_user_database.dart';
 import 'package:yoklama/utilities/constants.dart';
 
 class StudentLessons extends StatefulWidget {
@@ -18,31 +20,41 @@ class StudentLessons extends StatefulWidget {
 }
 
 class _StudentLessonsState extends State<StudentLessons> {
-  final Student student;
+  Student student;
 
   @override
   final GlobalKey<AnimatedListState> key = GlobalKey();
-
-  List<Lesson> items = [
-    new Lesson(
-        departmentName: "EXAM",
-        lessonName: "AAA",
-        lessonPersonUID: "AAA",
-        percent: "AAA"),
-    new Lesson(
-        departmentName: "EXAM",
-        lessonName: "AAA",
-        lessonPersonUID: "AAA",
-        percent: "AAA"),
-  ];
-
-  String lessonName = "", lessonPerson = "", numberOfStudents = "";
+  List<Lesson> items = [];
+  String lessonId;
+  bool loadingLesson = true;
 
   _StudentLessonsState(this.student);
 
   @override
   void initState() {
     super.initState();
+    getLessons().then((value) {
+      setState(() {
+        loadingLesson = false;
+      });
+    });
+  }
+
+  Future<void> getLessons() async {
+    items = [];
+    setState(() {
+      loadingLesson = true;
+    });
+    student = await getStudentUser(await new Authentication().getUID());
+
+    for (String id in student.studentLesson) {
+      print(id);
+      items.add(await getLesson(id));
+      print(items[0].lessonName);
+    }
+    setState(() {
+      loadingLesson = false;
+    });
   }
 
   @override
@@ -59,7 +71,7 @@ class _StudentLessonsState extends State<StudentLessons> {
           ]),
         ),
       ),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(student),
       body: Stack(children: <Widget>[
         Column(
           children: <Widget>[
@@ -68,7 +80,7 @@ class _StudentLessonsState extends State<StudentLessons> {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: () {
-                  print(FirebaseAuth.instance.currentUser.uid.toString());
+                  getLessons();
                   buildShowModalBottomSheet(context);
                 },
                 elevation: 5.0,
@@ -102,18 +114,30 @@ class _StudentLessonsState extends State<StudentLessons> {
               ),
             ),
             Expanded(
-              child: AnimatedList(
-                key: key,
-                initialItemCount: items.length,
-                itemBuilder: (context, index, animation) {
-                  return _buildItem(items[index], animation, index, context);
-                },
-              ),
+              child: loadingLesson == true
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemBuilder: (context, index) {
+                        return _buildItem(items[index], index, context);
+                      },
+                      itemCount: items.length,
+                    ),
             )
           ],
         ),
       ]),
     );
+  }
+
+  joinLesson() async {
+    student.studentLesson.add(lessonId);
+
+    Lesson lesson = await getLesson(lessonId);
+    lesson.students.add(student.studentUID);
+    updateLesson(lesson);
+    updateStudentUser(student);
   }
 
   Future buildShowModalBottomSheet(BuildContext context) {
@@ -149,18 +173,9 @@ class _StudentLessonsState extends State<StudentLessons> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () {
-                          setState(() {
-                            items.insert(
-                              0,
-                              new Lesson(
-                                  departmentName: "EXAM",
-                                  lessonName: "AAA",
-                                  lessonPersonUID: "AAA",
-                                  percent: "AAA"),
-                            );
-                            key.currentState.insertItem(0);
-                            Navigator.pop(context);
-                          });
+                          joinLesson();
+                          getLessons();
+                          Navigator.pop(context);
                         },
                         child: Text('+Katıl',
                             style:
@@ -178,7 +193,7 @@ class _StudentLessonsState extends State<StudentLessons> {
                     height: 60,
                     child: TextField(
                       onChanged: (text) {
-                        lessonName = text;
+                        lessonId = text;
                       },
                       style: TextStyle(color: Colors.white, fontSize: 17),
                       decoration: InputDecoration(
@@ -193,8 +208,7 @@ class _StudentLessonsState extends State<StudentLessons> {
   }
 }
 
-Widget _buildItem(
-    Lesson item, Animation animation, int index, BuildContext context) {
+Widget _buildItem(Lesson item, int index, BuildContext context) {
   return Container(
     child: Card(
       child: ListTile(
@@ -202,7 +216,9 @@ Widget _buildItem(
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => StudentLessonDetails()));
+                  builder: (BuildContext context) => StudentLessonDetails(
+                        lesson: item,
+                      )));
         },
         title: Text(
           item.lessonName,

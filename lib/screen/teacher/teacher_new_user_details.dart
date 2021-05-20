@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +22,6 @@ class TeacherNewUserDetails extends StatefulWidget {
 class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
   Teacher teacher;
   String teacherNameSurname;
-  String urlimage;
 
   int pageCount = 0;
   PageController pageController = PageController(initialPage: 0);
@@ -65,18 +62,9 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
     Reference firebaseStorage =
         FirebaseStorage.instance.ref().child("/usersprofilephoto/$uid");
 
-    UploadTask uploadTask = firebaseStorage.putFile(_image);
-
-    var url =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
-
-    setState(() {
-      urlimage = url.toString();
-      print(urlimage);
-    });
+    firebaseStorage.putFile(_image);
   }
 
-  String departmentOption;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,7 +211,7 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
                       " Ünvan seçiniz.",
                       style: TextStyle(color: Colors.black),
                     ),
-                    value: departmentOption,
+                    value: teacher.teacherDepartment,
                     onChanged: (value) {
                       setState(() {
                         teacher.teacherDepartment = value;
@@ -259,11 +247,12 @@ class _TeacherNewUserDetailsState extends State<TeacherNewUserDetails> {
             padding: EdgeInsets.all(10),
             child: Button(
                 onPress: () {
-                  teacherUserUpdate(teacher);
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => TeacherLessons()));
+                  teacherCreat(teacher).then((value) =>
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  TeacherLessons())));
                 },
                 buttonName: "Kaydet"),
           )

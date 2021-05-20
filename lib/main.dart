@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yoklama/module/theme_data_modal.dart';
 import 'package:yoklama/screen/login_screen.dart';
-
 void main() {
   runApp(ChangeNotifierProvider(
     create: (context) => ThemeDataModal(),

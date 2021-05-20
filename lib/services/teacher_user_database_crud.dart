@@ -5,6 +5,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/services/auth.dart';
 
+Future<void> teacherCreat(Teacher teacher) async {
+  teacher.teachertUID = await new Authentication().getUID();
+  teacher.profileImageURL = await new Authentication().getUserProfileImageURL();
+  teacher.teacherLesson = [];
+
+  DocumentReference documentReference = FirebaseFirestore.instance
+      .collection("teachers")
+      .doc(teacher.teachertUID);
+
+  documentReference.set(teacher.toJson());
+}
+
 Future<void> teacherUserUpdate(var varaible) async {
   String uid = FirebaseAuth.instance.currentUser.uid;
 
@@ -16,11 +28,6 @@ Future<void> teacherUserUpdate(var varaible) async {
       FirebaseFirestore.instance.collection("teachers").doc(uid);
 
   studentDoc.update(teacher.toJson());
-
-  // studentDoc
-  //     .set(teacher.toJson())
-  //     .whenComplete(() => null)
-  //     .onError((error, stackTrace) => print("hata"));
 }
 
 Future<Teacher> teacherUserGetData() async {
@@ -30,9 +37,21 @@ Future<Teacher> teacherUserGetData() async {
       FirebaseFirestore.instance.collection("teachers").doc(uid);
 
   var response = await teacherDoc.get();
-  var veri = response.data();
+  var data = response.data();
 
-  Teacher teacher = new Teacher.fromJson(veri);
+  Teacher teacher = new Teacher.fromJson(data);
+
+  return teacher;
+}
+
+Future<Teacher> teacherUserGetDatas(String id) async {
+  DocumentReference teacherDoc =
+      FirebaseFirestore.instance.collection("teachers").doc(id);
+
+  var response = await teacherDoc.get();
+  var data = response.data();
+
+  Teacher teacher = new Teacher.fromJson(data);
 
   return teacher;
 }

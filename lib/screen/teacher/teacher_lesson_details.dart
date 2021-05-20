@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/module/lesson.dart';
+import 'package:yoklama/screen/teacher/teacher_lesson_info.dart';
 import 'package:yoklama/screen/teacher/teacher_signature.dart';
 import 'package:yoklama/screen/teacher/teacher_student_list.dart';
 import 'package:yoklama/utilities/constants.dart';
@@ -20,18 +21,22 @@ class _TeacherLessonDetailsState extends State<TeacherLessonDetails> {
 
   int bottomBarCurrentIndex = 0;
 
-  List<Widget> widgetOptions = [
-    TeacherNotification(),
-    TeacherStudentList(),
-    TeacherSignature()
-  ];
-
   _TeacherLessonDetailsState(this.lesson);
+
+  List<Widget> widgetOptions() {
+    return [
+      TeacherNotification(
+        lesson: lesson,
+      ),
+      TeacherSList(lesson: lesson),
+      TeacherSignature()
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widgetOptions[bottomBarCurrentIndex],
+      body: widgetOptions()[bottomBarCurrentIndex],
       bottomNavigationBar: BottomNavigationBar(
           onTap: (index) {
             setState(() {
@@ -57,7 +62,16 @@ class _TeacherLessonDetailsState extends State<TeacherLessonDetails> {
               lesson.lessonName,
               style: kAppBarTextStyle,
             ),
-            Icon(Icons.settings),
+            GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TeacherLessonInfo(
+                                lesson: lesson,
+                              )));
+                },
+                child: Icon(Icons.info)),
           ],
         ),
       )),

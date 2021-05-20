@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/screen/login_screen.dart';
 import 'package:yoklama/screen/student/student_profile.dart';
 import 'package:yoklama/screen/teacher/teacher_settings.dart';
 
 class MainDrawer extends StatelessWidget {
-  final file = NetworkImage(
-      "https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/usersprofilephoto%2FlwjXNWJCvfXLttJEfKtKv8e4Czr1?alt=media&token=4f4db20a-99b2-413c-8c21-054d7c1a0b6a");
+  Student student;
+
+  MainDrawer(this.student);
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +28,18 @@ class MainDrawer extends StatelessWidget {
                   children: <Widget>[
                     Hero(
                       tag: "volkan",
-                      child: CircleAvatar(radius: 50, backgroundImage: file),
+                      child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              NetworkImage("${student.studentImageUrl}")),
                     ),
-                    Text("Volkan Üstekidağ",
+                    Text("${student.studentNameSurname}",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     Text(
-                      "02170201039@inonu.edu.tr",
+                      "${student.studentMail}",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                   ],

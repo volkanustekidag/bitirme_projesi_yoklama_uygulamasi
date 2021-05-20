@@ -3,6 +3,7 @@ class Teacher {
   String teacherNameSurname;
   String teacherMail;
   String teacherDepartment;
+  String profileImageURL;
   List<String> teacherLesson;
 
   Teacher(
@@ -10,6 +11,7 @@ class Teacher {
       this.teacherNameSurname,
       this.teacherMail,
       this.teacherDepartment,
+      this.profileImageURL,
       this.teacherLesson});
 
   Teacher.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Teacher {
     teacherNameSurname = json['teacherNameSurname'];
     teacherMail = json['teacherMail'];
     teacherDepartment = json['teacherDepartment'];
+    profileImageURL = json['profileImageURL'];
     teacherLesson = json['teacherLesson'].cast<String>();
   }
 
@@ -27,6 +30,7 @@ class Teacher {
     data['teacherMail'] = this.teacherMail;
     data['teacherDepartment'] = this.teacherDepartment;
     data['teacherLesson'] = this.teacherLesson;
+    data['profileImageURL'] = this.profileImageURL;
     return data;
   }
 }

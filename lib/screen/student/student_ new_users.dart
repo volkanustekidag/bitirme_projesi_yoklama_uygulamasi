@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:yoklama/services/auth.dart';
+import 'package:yoklama/services/student_user_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:yoklama/module/student.dart';
@@ -56,19 +57,12 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
   }
 
   Future uploadProfileImage() async {
-    Reference firebaseStorage = FirebaseStorage.instance
-        .ref()
-        .child("/usersprofilephoto/${student.studentUID}");
+    Authentication authentication = new Authentication();
+    String uid = await authentication.getUID();
+    Reference firebaseStorage =
+        FirebaseStorage.instance.ref().child("/usersprofilephoto/$uid");
 
-    UploadTask uploadTask = firebaseStorage.putFile(_image);
-
-    var url =
-        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
-
-    setState(() {
-      urlimage = url.toString();
-      print(urlimage);
-    });
+    firebaseStorage.putFile(_image);
   }
 
   String onChangedValue;
@@ -218,10 +212,10 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
                       "Bölüm seçiniz.",
                       style: TextStyle(color: Colors.black),
                     ),
-                    value: onChangedValue,
+                    value: student.studentDepartment,
                     onChanged: (value) {
                       setState(() {
-                        onChangedValue = value;
+                        student.studentDepartment = value;
                       });
                     },
                     items: [
@@ -245,32 +239,16 @@ class _StundentNewUsersState extends State<StundentNewUsers> {
             padding: EdgeInsets.all(10),
             child: Button(
                 onPress: () {
-                  studentUserUpdate();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => StudentLessons()));
+                  createStudentUser(student).then((value) =>
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  StudentLessons())));
                 },
                 buttonName: "Kaydet"),
           )
         ]));
-  }
-
-  Future<void> studentUserUpdate() async {
-    DocumentReference studentDoc = FirebaseFirestore.instance
-        .collection("students")
-        .doc(student.studentUID);
-
-    studentDoc
-        .set({
-          'uid': student.studentUID,
-          'ad_soyad': student.studentNameSurname,
-          'email': student.studentMail,
-          'departman': onChangedValue,
-          'image_url': urlimage,
-        })
-        .whenComplete(() => null)
-        .onError((error, stackTrace) => print("hata"));
   }
 
   DropdownMenuItem<String> buildDropdownMenuItem(

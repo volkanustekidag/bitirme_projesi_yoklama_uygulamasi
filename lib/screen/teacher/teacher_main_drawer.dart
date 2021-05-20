@@ -1,10 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/login_screen.dart';
 import 'package:yoklama/screen/teacher/teacher_profile.dart';
 import 'package:yoklama/screen/teacher/teacher_settings.dart';
+import 'package:yoklama/services/teacher_user_database_crud.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
+  final Teacher teacher;
+
+  const MainDrawer({Key key, this.teacher}) : super(key: key);
+  @override
+  _MainDrawerState createState() => _MainDrawerState(teacher);
+}
+
+class _MainDrawerState extends State<MainDrawer> {
+  final Teacher teacher;
+
+  _MainDrawerState(this.teacher);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -24,17 +38,17 @@ class MainDrawer extends StatelessWidget {
                       tag: "ali",
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage: NetworkImage(
-                            'https://firebasestorage.googleapis.com/v0/b/yoklama-df3e9.appspot.com/o/usersprofilephoto%2FJAjQaTdSWqOcT7yHyrHjePZ3ezZ2?alt=media&token=e904e02d-d548-4ea1-a27d-33471647c907'),
+                        backgroundImage:
+                            NetworkImage('${teacher.profileImageURL}'),
                       ),
                     ),
-                    Text("Ali ARI",
+                    Text("${teacher.teacherNameSurname}",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     Text(
-                      "ali.ari@inonu.edu.tr",
+                      "${teacher.teacherMail}",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                   ],

@@ -1,16 +1,16 @@
-class Notification {
+class Notificationn {
   String notificationId;
   String notificationTeacherUID;
   String notificationContent;
   String notificationDate;
 
-  Notification(
+  Notificationn(
       {this.notificationId,
       this.notificationTeacherUID,
       this.notificationContent,
       this.notificationDate});
 
-  Notification.fromJson(Map<String, dynamic> json) {
+  Notificationn.fromJson(Map<String, dynamic> json) {
     notificationId = json['notificationId'];
     notificationTeacherUID = json['notificationTeacherUID'];
     notificationContent = json['notificationContent'];

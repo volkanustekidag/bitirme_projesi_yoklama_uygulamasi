@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/module/notification.dart';
 import 'package:yoklama/module/teacher.dart';
-import 'package:yoklama/services/teacher_user_database_crud.dart';
 
-class TeachNotificationDetails extends StatefulWidget {
-  final Notificationn notificationn;
+class StudentNotificationDetails extends StatefulWidget {
+  final Notificationn notification;
   final Teacher teacher;
 
-  TeachNotificationDetails(this.notificationn, this.teacher);
+  const StudentNotificationDetails({Key key, this.notification, this.teacher})
+      : super(key: key);
+
   @override
-  _TeachNotificationDetailsState createState() =>
-      _TeachNotificationDetailsState(notificationn, teacher);
+  _StudentNotificationDetailsState createState() =>
+      _StudentNotificationDetailsState(notification, teacher);
 }
 
-class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
-  final Notificationn notificationn;
+class _StudentNotificationDetailsState
+    extends State<StudentNotificationDetails> {
+  final Notificationn notification;
   final Teacher teacher;
-  bool dataLoadign = true;
-  _TeachNotificationDetailsState(this.notificationn, this.teacher);
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print(teacher.teacherNameSurname);
-  }
+  _StudentNotificationDetailsState(this.notification, this.teacher);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +59,7 @@ class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '${notificationn.notificationDate}',
+                            '${notification.notificationDate}',
                             style: TextStyle(
                               fontSize: 14,
                             ),
@@ -95,7 +90,7 @@ class _TeachNotificationDetailsState extends State<TeachNotificationDetails> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "${notificationn.notificationContent}",
+                  "${notification.notificationContent}",
                   style: TextStyle(fontSize: 16),
                 ),
               )

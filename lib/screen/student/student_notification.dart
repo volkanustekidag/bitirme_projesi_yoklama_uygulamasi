@@ -1,35 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:yoklama/screen/teacher/teacher_notification_details.dart';
+import 'package:yoklama/module/lesson.dart';
+import 'package:yoklama/module/notification.dart';
+import 'package:yoklama/module/teacher.dart';
+import 'package:yoklama/screen/student/student_notification_details.dart';
+import 'package:yoklama/services/notification_database.dart';
+import 'package:yoklama/services/teacher_user_database_crud.dart';
 
 class StudentNotification extends StatefulWidget {
+  final Lesson lesson;
+  const StudentNotification({Key key, this.lesson}) : super(key: key);
+
   @override
-  _StudentNotificationState createState() => _StudentNotificationState();
+  _StudentNotificationState createState() => _StudentNotificationState(lesson);
 }
 
 String postContent;
 
-List<String> post = [
-  "Bitirme Projesi için bu hafta sunum yapılmayacaktır. Sınav dolayısıyla sunumu haftaya erteledik. \n\n Saygılarımla"
-];
+List<Notificationn> notifications = [];
 
 class _StudentNotificationState extends State<StudentNotification> {
+  final Lesson lesson;
+  Teacher teacher;
+  _StudentNotificationState(this.lesson);
+
+  bool loadingNotification = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNotifications().then((value) {
+      setState(() {
+        loadingNotification = false;
+      });
+    });
+  }
+
+  Future<void> getNotifications() async {
+    notifications = [];
+    for (String id in lesson.notifications) {
+      notifications.add(await getNotification(id));
+    }
+
+    if (notifications.isNotEmpty)
+      teacher =
+          await teacherUserGetDatas(notifications[0].notificationTeacherUID);
+
+    notifications
+        .sort((a, b) => b.notificationDate.compareTo(a.notificationDate));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
       children: [
         Expanded(
-          child: AnimatedList(
-              initialItemCount: post.length,
-              itemBuilder: (context, index, animation) {
-                return buildItem(post[index], context);
-              }),
+          child: loadingNotification == true
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : (notifications.isEmpty == true
+                  ? Center(
+                      child: Text("Henüz hiç duyuru yapılmamış."),
+                    )
+                  : ListView.builder(
+                      itemCount: notifications.length,
+                      itemBuilder: (context, index) =>
+                          buildItem(notifications[index], context),
+                    )),
         ),
       ],
     ));
   }
 
-  Widget buildItem(String item, BuildContext context) {
+  Widget buildItem(Notificationn item, BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -39,14 +84,15 @@ class _StudentNotificationState extends State<StudentNotification> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        TeachNotificationDetails()));
+                        StudentNotificationDetails(
+                            notification: item, teacher: teacher)));
           },
           leading: CircleAvatar(
-            backgroundImage: AssetImage('images/ali.jpg'),
+            backgroundImage: NetworkImage('${teacher.profileImageURL}'),
           ),
-          title: Text('Ali Arı'),
+          title: Text('${teacher.teacherNameSurname}'),
           trailing: Icon(Icons.arrow_forward_ios),
-          subtitle: Text(item),
+          subtitle: Text(item.notificationContent),
         ),
       ),
     );

@@ -23,12 +23,10 @@ class _TeacherLessonsState extends State<TeacherLessons> {
 
   List<Lesson> items = [];
 
-  String lessonName = "", lessonPerson = "", numberOfStudents = "";
   bool loading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getLessons().then((value) {
       setState(() {
@@ -57,7 +55,9 @@ class _TeacherLessonsState extends State<TeacherLessons> {
           ),
         ]),
       ),
-      drawer: MainDrawer(),
+      drawer: MainDrawer(
+        teacher: teacher,
+      ),
       body: Stack(children: <Widget>[
         Column(
           children: <Widget>[
@@ -148,6 +148,7 @@ class _TeacherLessonsState extends State<TeacherLessons> {
                           createLesson(lesson);
                           setState(() {
                             items.add(lesson);
+                            lesson = new Lesson();
                           });
                           Navigator.pop(context);
                         },

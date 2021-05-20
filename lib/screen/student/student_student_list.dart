@@ -1,38 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:yoklama/module/lesson.dart';
+import 'package:yoklama/module/student.dart';
+import 'package:yoklama/services/student_user_database.dart';
 
-class StudentStundetList extends StatelessWidget {
+class StudenTSList extends StatefulWidget {
+  final Lesson lesson;
+
+  const StudenTSList({Key key, this.lesson}) : super(key: key);
   @override
-  List<String> items = [
-    "Volkan Üstekidağ",
-    "Ahmet Çavuş",
-    "Alican Dik",
-    "Ayşe Küçük",
-    "Abdullah Mutlu",
-    "Aysel Bilmem",
-    "Ahmet Çavuş",
-    "Alican Dik",
-    "Ayşe Küçük",
-    "Abdullah Mutlu",
-    "Ahmet Çavuş",
-    "Alican Dik",
-    "Ayşe Küçük",
-    "Abdullah Mutlu"
-  ];
+  _StudenTSListState createState() => _StudenTSListState(lesson);
+}
+
+class _StudenTSListState extends State<StudenTSList> {
+  final Lesson lesson;
+  bool loadingList = true;
+
+  List<Student> studentList = [];
+
+  _StudenTSListState(this.lesson);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getStudents().then((value) {
+      setState(() {
+        loadingList = false;
+      });
+    });
+  }
+
+  Future<void> getStudents() async {
+    for (String uid in lesson.students) {
+      print(uid + "******");
+      studentList.add(await getStudentUser(uid));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          AnimatedList(
-              key: key,
-              initialItemCount: items.length,
-              itemBuilder: (context, index, animation) {
-                return itemBuilder(items[index], animation, index, context);
-              })
-        ],
-      ),
-    );
+        body: loadingList == true
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                itemCount: studentList.length,
+                itemBuilder: (context, index) {
+                  return itemBuilder(studentList[index], index, context);
+                },
+              ));
   }
 }
 
@@ -42,20 +59,22 @@ String getUserTag(String nameLastName) {
   return ((nameSurname[0])[0] + (nameSurname[1])[0]).toUpperCase();
 }
 
-Widget itemBuilder(
-    String nameLastName, Animation animation, int index, BuildContext context) {
+Widget itemBuilder(Student student, int index, BuildContext context) {
   return Container(
     child: Card(
       child: ListTile(
         leading: CircleAvatar(
-          child: Text(
-            "${getUserTag(nameLastName)}",
-            style: TextStyle(
-                fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-        title: Text(nameLastName),
-        subtitle: Text("13.09.2020'inde tarihinde katıldı."),
+            backgroundImage: student.studentImageUrl.isEmpty
+                ? Text(
+                    "${getUserTag(student.studentNameSurname)}",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  )
+                : NetworkImage(student.studentImageUrl)),
+        title: Text(student.studentNameSurname),
+        subtitle: Text(student.studentDepartment),
       ),
     ),
   );

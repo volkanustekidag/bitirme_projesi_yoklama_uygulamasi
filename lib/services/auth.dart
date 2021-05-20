@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Authentication {
   String email;
@@ -33,20 +34,17 @@ class Authentication {
         .createUserWithEmailAndPassword(email: email, password: pass)
         .then((value) => null);
 
-    // String uid = await getUID();
-
-    // DocumentReference firebaseFirestore =
-    //     FirebaseFirestore.instance.collection('students').doc(uid);
-
-    // firebaseFirestore
-    //     .set({
-    //       'uid': uid,
-    //       'ad_soyad': nameSurname,
-    //       'email': email,
-    //     })
-    //     .then((value) => print("User Added"))
-    //     .catchError((error) => print("Failed to add user: $error"));
-
     return;
+  }
+
+  Future<String> getUserProfileImageURL() async {
+    String uid = await getUID();
+
+    Reference reference =
+        FirebaseStorage.instance.ref().child("/usersprofilephoto/$uid");
+
+    var response = reference.getDownloadURL();
+
+    return response;
   }
 }

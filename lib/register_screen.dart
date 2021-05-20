@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yoklama/forgot_pass_view.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/module/teacher.dart';
 import 'package:yoklama/screen/student/student_%20new_users.dart';
 import 'package:yoklama/screen/teacher/teacher_new_user_details.dart';
@@ -248,19 +249,22 @@ class RegisterButton extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => StundentNewUsers(
-                        student: null,
+                        student: new Student(
+                            studentNameSurname: auth.nameSurname,
+                            studentMail: auth.email),
                       )));
         } else {
-          auth.registerUser('teachers');
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TeacherNewUserDetails(
-                        teacher: new Teacher(
-                          teacherNameSurname: auth.nameSurname,
-                          teacherMail: auth.email,
-                        ),
-                      )));
+          auth
+              .registerUser('teachers')
+              .then((value) => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TeacherNewUserDetails(
+                            teacher: new Teacher(
+                              teacherNameSurname: auth.nameSurname,
+                              teacherMail: auth.email,
+                            ),
+                          ))));
         }
       },
     );
