@@ -80,7 +80,8 @@ class _TeacherProfileState extends State<TeacherProfile> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage('images/ali.jpg'))),
+                                    image:
+                                        NetworkImage(teacher.profileImageURL))),
                           ),
                         ),
                       ),
@@ -101,6 +102,14 @@ class _TeacherProfileState extends State<TeacherProfile> {
                       "${teacher.teacherMail}",
                     ),
                     leading: Icon(Icons.email),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    title: Text(
+                      teacher.teacherDepartment,
+                    ),
+                    leading: Icon(Icons.school),
                   ),
                 ),
                 Card(

@@ -51,7 +51,9 @@ class MainDrawer extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => StudentProfile()));
+                        builder: (BuildContext context) => StudentProfile(
+                              student: student,
+                            )));
               },
               leading: Icon(Icons.person),
               title: Text(

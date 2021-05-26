@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:yoklama/module/student.dart';
 import 'package:yoklama/services/student_user_database.dart';
-import 'package:yoklama/utilities/constants.dart';
 
 class TeacherSList extends StatefulWidget {
   final Lesson lesson;
@@ -41,18 +40,39 @@ class _TeacherSListState extends State<TeacherSList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: loadingList == true
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : studentList.isEmpty
-                ? Center(child: Text("Henüz öğrenci yok."))
-                : ListView.builder(
-                    itemCount: studentList.length,
-                    itemBuilder: (context, index) {
-                      return itemBuilder(studentList[index], index, context);
-                    },
-                  ));
+        body: Container(
+            alignment: Alignment.center,
+            child: loadingList == true
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ((studentList.isEmpty
+                    ? Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.group,
+                              size: 30,
+                              color: Colors.black38,
+                            ),
+                            Text(
+                              'Henüz hiç öğrenci katılmamış.',
+                              style: TextStyle(
+                                color: Colors.black38,
+                                fontSize: 20.00,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: studentList.length,
+                        itemBuilder: (context, index) {
+                          return itemBuilder(
+                              studentList[index], index, context);
+                        },
+                      )))));
   }
 }
 

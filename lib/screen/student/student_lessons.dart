@@ -80,7 +80,6 @@ class _StudentLessonsState extends State<StudentLessons> {
               width: double.infinity,
               child: RaisedButton(
                 onPressed: () {
-                  getLessons();
                   buildShowModalBottomSheet(context);
                 },
                 elevation: 5.0,
@@ -118,12 +117,32 @@ class _StudentLessonsState extends State<StudentLessons> {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : ListView.builder(
-                      itemBuilder: (context, index) {
-                        return _buildItem(items[index], index, context);
-                      },
-                      itemCount: items.length,
-                    ),
+                  : (items.isEmpty
+                      ? Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.book,
+                                size: 30,
+                                color: Colors.black38,
+                              ),
+                              Text(
+                                'Henüz hiç derse katılınmamış.',
+                                style: TextStyle(
+                                  color: Colors.black38,
+                                  fontSize: 20.00,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemBuilder: (context, index) {
+                            return _buildItem(items[index], index, context);
+                          },
+                          itemCount: items.length,
+                        )),
             )
           ],
         ),
@@ -132,12 +151,13 @@ class _StudentLessonsState extends State<StudentLessons> {
   }
 
   joinLesson() async {
+    print(lessonId);
     student.studentLesson.add(lessonId);
 
     Lesson lesson = await getLesson(lessonId);
     lesson.students.add(student.studentUID);
-    updateLesson(lesson);
-    updateStudentUser(student);
+    await updateLesson(lesson);
+    await updateStudentUser(student);
   }
 
   Future buildShowModalBottomSheet(BuildContext context) {
@@ -172,9 +192,9 @@ class _StudentLessonsState extends State<StudentLessons> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: () {
-                          joinLesson();
-                          getLessons();
+                        onTap: () async {
+                          await joinLesson();
+                          await getLessons();
                           Navigator.pop(context);
                         },
                         child: Text('+Katıl',
@@ -224,7 +244,7 @@ Widget _buildItem(Lesson item, int index, BuildContext context) {
           item.lessonName,
           style: null,
         ),
-        subtitle: Text("10 Öğrenci"),
+        subtitle: Text(item.students.length.toString() + " Öğrenci"),
         trailing: IconButton(
           icon: Icon(Icons.book),
           onPressed: () {},

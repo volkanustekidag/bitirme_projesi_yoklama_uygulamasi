@@ -53,24 +53,36 @@ class _StudentNotificationState extends State<StudentNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        Expanded(
-          child: loadingNotification == true
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : (notifications.isEmpty == true
-                  ? Center(
-                      child: Text("Henüz hiç duyuru yapılmamış."),
+        body: Container(
+      child: loadingNotification == true
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : (Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: notifications.isEmpty == true
+                  ? Column(
+                      children: [
+                        Icon(
+                          Icons.notifications,
+                          size: 30,
+                          color: Colors.black38,
+                        ),
+                        Text(
+                          'Henüz hiç duyuru paylaşılmamış.',
+                          style: TextStyle(
+                            color: Colors.black38,
+                            fontSize: 20.00,
+                          ),
+                        )
+                      ],
                     )
                   : ListView.builder(
                       itemCount: notifications.length,
                       itemBuilder: (context, index) =>
                           buildItem(notifications[index], context),
-                    )),
-        ),
-      ],
+                    ))),
     ));
   }
 

@@ -8,6 +8,7 @@ class Lesson {
   bool signatureOnline;
   List<String> students;
   List<String> notifications;
+  List<String> signatures;
 
   Lesson(
       {this.lessonId,
@@ -16,7 +17,8 @@ class Lesson {
       this.percent,
       this.lessonPersonUID,
       this.comment,
-      this.notifications});
+      this.notifications,
+      this.signatures});
 
   Lesson.fromJson(Map<String, dynamic> json) {
     lessonId = json['lessonId'];
@@ -28,6 +30,7 @@ class Lesson {
     signatureOnline = json['signatureOnline'];
     notifications = json['notifications'].cast<String>();
     students = json['students'].cast<String>();
+    signatures = json['signatures'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +44,7 @@ class Lesson {
     data['signatureOnline'] = this.signatureOnline;
     data['notifications'] = this.notifications;
     data['students'] = this.students;
+    data['signatures'] = this.signatures;
     return data;
   }
 }

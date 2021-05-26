@@ -261,11 +261,6 @@ class RegisterTextContanier extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Image(
-            image: AssetImage('images/logo.png'),
-            height: 50,
-            width: 50,
-          ),
           TextButton(
             onPressed: () {
               Navigator.push(

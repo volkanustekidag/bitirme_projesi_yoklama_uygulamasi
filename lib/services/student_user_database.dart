@@ -28,9 +28,11 @@ Future<Student> getStudentUser(String uid) async {
   return student;
 }
 
-Future<Student> updateStudentUser(Student student) async {
+Future<void> updateStudentUser(Student student) async {
   DocumentReference documentReference =
       FirebaseFirestore.instance.collection("students").doc(student.studentUID);
 
-  documentReference.update(student.toJson());
+  documentReference
+      .update(student.toJson())
+      .onError((error, stackTrace) => print(error.toString()));
 }

@@ -66,7 +66,7 @@ class BottomNavBar extends StatelessWidget {
         currentIndex: bottomBarCurrentIndex,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.alarm), title: Text('Duyuru')),
+              icon: Icon(Icons.notifications), title: Text('Duyuru')),
           BottomNavigationBarItem(
               icon: Icon(Icons.group), title: Text('Öğrenciler')),
           BottomNavigationBarItem(

@@ -13,6 +13,7 @@ Future<void> createLesson(Lesson lesson) async {
 
   lesson.notifications = [];
   lesson.students = [];
+  lesson.signatures = [];
   lesson.lessonId = lessonId;
   DocumentReference lessonDoc =
       FirebaseFirestore.instance.collection("lessons").doc(lessonId);

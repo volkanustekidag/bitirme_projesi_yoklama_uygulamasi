@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:yoklama/module/lesson.dart';
 import 'package:yoklama/module/notification.dart';
 import 'package:yoklama/module/teacher.dart';
@@ -125,15 +124,31 @@ class _TeacherNotificationState extends State<TeacherNotification> {
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              : (notifications.isEmpty == true
-                  ? Center(
-                      child: Text("Henüz hiç duyuru yapılmamış."),
-                    )
-                  : ListView.builder(
-                      itemCount: notifications.length,
-                      itemBuilder: (context, index) =>
-                          buildItem(notifications[index], context),
-                    )),
+              : Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: (notifications.isEmpty == true
+                      ? Column(
+                          children: [
+                            Icon(
+                              Icons.notifications,
+                              size: 30,
+                              color: Colors.black38,
+                            ),
+                            Text(
+                              'Henüz hiç duyuru paylaşılmamış.',
+                              style: TextStyle(
+                                color: Colors.black38,
+                                fontSize: 20.00,
+                              ),
+                            )
+                          ],
+                        )
+                      : ListView.builder(
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) =>
+                              buildItem(notifications[index], context),
+                        )),
+                ),
         )
       ],
     ));
@@ -181,7 +196,7 @@ class _TeacherNotificationState extends State<TeacherNotification> {
                         width: 5,
                       ),
                       CircleAvatar(
-                        backgroundImage: AssetImage('images/ali.jpg'),
+                        backgroundImage: NetworkImage(teacher.profileImageURL),
                       ),
                       SizedBox(
                         width: 8,

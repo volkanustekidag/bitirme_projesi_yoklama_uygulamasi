@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:yoklama/module/student.dart';
 import 'package:yoklama/utilities/constants.dart';
 
 class StudentProfile extends StatelessWidget {
+  final Student student;
+
+  const StudentProfile({Key key, this.student}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +31,7 @@ class StudentProfile extends StatelessWidget {
                 Positioned(
                   top: 70,
                   left: 150,
-                  child: Text("Volkan Üstekidağ",
+                  child: Text(student.studentNameSurname,
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -36,7 +40,7 @@ class StudentProfile extends StatelessWidget {
                 Positioned(
                   top: 95,
                   left: 150,
-                  child: Text("Bilgisayar Mühendisliği",
+                  child: Text(student.studentDepartment,
                       style: TextStyle(fontSize: 15, color: Colors.white)),
                 ),
                 Positioned(
@@ -51,7 +55,7 @@ class StudentProfile extends StatelessWidget {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('images/volkan.jpg'))),
+                              image: NetworkImage(student.studentImageUrl))),
                     ),
                   ),
                 ),
@@ -61,7 +65,7 @@ class StudentProfile extends StatelessWidget {
           Card(
             child: ListTile(
               title: Text(
-                "Volkan Üstekidağ",
+                student.studentNameSurname,
               ),
               leading: Icon(Icons.person),
             ),
@@ -69,7 +73,7 @@ class StudentProfile extends StatelessWidget {
           Card(
             child: ListTile(
               title: Text(
-                "02170201039@inonu.edu.tr",
+                student.studentMail,
               ),
               leading: Icon(Icons.email),
             ),
@@ -77,9 +81,9 @@ class StudentProfile extends StatelessWidget {
           Card(
             child: ListTile(
               title: Text(
-                "*************",
+                student.studentDepartment,
               ),
-              leading: Icon(Icons.lock_rounded),
+              leading: Icon(Icons.school),
             ),
           ),
           Card(

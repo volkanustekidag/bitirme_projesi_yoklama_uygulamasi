@@ -104,11 +104,31 @@ class _TeacherLessonsState extends State<TeacherLessons> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : ListView.builder(
-                        itemBuilder: (context, index) =>
-                            _buildItem(items[index], index, context),
-                        itemCount: items.length,
-                      ))
+                    : (items.isEmpty
+                        ? Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.book,
+                                  size: 30,
+                                  color: Colors.black38,
+                                ),
+                                Text(
+                                  'Henüz hiç oluşturulmamış.',
+                                  style: TextStyle(
+                                    color: Colors.black38,
+                                    fontSize: 20.00,
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (context, index) =>
+                                _buildItem(items[index], index, context),
+                            itemCount: items.length,
+                          )))
           ],
         ),
       ]),
